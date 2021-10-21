@@ -1,7 +1,10 @@
 module Main where
 
-helloWorld :: IO ()
-helloWorld = print "Hello World"
+newtype NoQuotes = NoQuotes String
+instance Show NoQuotes where show (NoQuotes string) = string
+
+helloWorld :: String
+helloWorld = "Hello World"
 
 main :: IO ()
-main = helloWorld
+main = print $ NoQuotes helloWorld
