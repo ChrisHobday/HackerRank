@@ -1,5 +1,7 @@
 module Main where
 
+import Data.Bifunctor
+
 -- minBreaks :: Int -> Int -> [Int] -> Int
 -- minBreaks _ minBreakCount [] = minBreakCount
 -- minBreaks currentMin minBreakCount (score:scores)
@@ -15,11 +17,13 @@ module Main where
   -- | otherwise          = maxBreaks currentMax maxBreakCount scores
 
 -- Calculate the total min breaks and max breaks of a given list of scores
+-- Interesting bimap solution
 minMaxBreaks :: Int -> Int -> Int -> Int -> [Int] -> (Int,Int)
 minMaxBreaks _ minBreakCount _ maxBreakCount [] = (minBreakCount,maxBreakCount)
 minMaxBreaks currentMin minBreakCount currentMax maxBreakCount (score:scores)
-  = (fromEnum (score < currentMin) + fst (minMaxBreaks (min score currentMin) minBreakCount (max score currentMax) maxBreakCount scores)
-    ,fromEnum (score > currentMax) + snd (minMaxBreaks (min score currentMin) minBreakCount (max score currentMax) maxBreakCount scores))
+  = bimap (fromEnum (score < currentMin) +) (fromEnum (score > currentMax) +) (minMaxBreaks (min score currentMin) minBreakCount (max score currentMax) maxBreakCount scores)
+  -- = (fromEnum (score < currentMin) + fst (minMaxBreaks (min score currentMin) minBreakCount (max score currentMax) maxBreakCount scores)
+  --   ,fromEnum (score > currentMax) + snd (minMaxBreaks (min score currentMin) minBreakCount (max score currentMax) maxBreakCount scores))
 
 -- Print the total min breaks and max breaks of a given list of scores
 breakingRecords :: [Int] -> IO ()
