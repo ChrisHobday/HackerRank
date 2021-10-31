@@ -18,7 +18,7 @@ checkDivisible a (b,c) = (b + c) `mod` a == 0
 
 -- The number of pairs in a given list of numbers that when summed are divisible by a given number
 divisibleSumPairs :: Int -> [Int] -> Int
-divisibleSumPairs k ar = sum $ map fromEnum $ map (checkDivisible k) (allPairs ar)
+divisibleSumPairs k ar = sum $ map (fromEnum . checkDivisible k) (allPairs ar)
 
 main :: IO ()
 main = do
