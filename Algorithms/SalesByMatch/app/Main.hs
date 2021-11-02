@@ -4,8 +4,7 @@ import Data.List ( group, sort )
 
 -- The number of sock pairs of a given group sorted list
 sockPairs :: Foldable t => [t a] -> Int
-sockPairs []    = 0
-sockPairs (sock:socks) = ((length sock) `div` 2) + sockPairs socks
+sockPairs socks = foldr (\sock -> (+) (length sock `div` 2)) 0 socks
 
 -- The number of sock pairs of a given list
 sockMerchant :: Ord a => [a] -> Int
