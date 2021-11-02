@@ -1,25 +1,30 @@
 module Main where
 
-import Data.List ( sortBy, minimumBy )
+import Data.List ( sort, group, minimumBy )
+import Data.Ord ( comparing )
 
-numBirdTypes = 5
+-- numBirdTypes = 5
 
 -- The number of times a given number occurs in a given list
-numOccurences :: (Eq a, Num b) => a -> [a] -> b
-numOccurences _ [] = 0
-numOccurences a bs = sum $ map (const 1) $ filter (== a) bs
+-- numOccurences :: (Eq a, Num b) => a -> [a] -> b
+-- numOccurences _ [] = 0
+-- numOccurences a bs = sum $ map (const 1) $ filter (== a) bs
 
 -- A list of (bird,sighting) pairs with a given number of birds and a given list of sightings
-birdSightings :: (Num b) => Int -> [Int] -> [(Int, b)]
-birdSightings _ [] = []
-birdSightings 0 _  = []
-birdSightings a bs = birdSightings (a - 1) bs ++ [(a, numOccurences a bs)]
+-- birdSightings :: (Num b) => Int -> [Int] -> [(Int, b)]
+-- birdSightings _ [] = []
+-- birdSightings 0 _  = []
+-- birdSightings a bs = birdSightings (a - 1) bs ++ [(a, numOccurences a bs)]
 
 -- The bird with the most sightings from a given list of bird sightings
-migratoryBirds :: [Int] -> Int
-migratoryBirds as = fst $ minimumBy (\(_,a) (_,b) -> compare b a) (birdSightings numBirdTypes as)
+-- migratoryBirds :: [Int] -> Int
+-- migratoryBirds as = fst $ minimumBy (\(_,a) (_,b) -> compare b a) (birdSightings numBirdTypes as)
 -- migratoryBirds as = fst $ head $ sortBy (\(_,a) (_,b) -> compare b a) (birdSightings numBirdTypes as)
 -- migratoryBirds as = fst $ last $ filter ((== maximum (map snd (birdSightings numBirdTypes as))) . snd) (birdSightings numBirdTypes as)
+
+-- The bird with the most sightings from a given list of bird sightings (in the event or ties, will be the lowest number bird)
+migratoryBirds :: [Int] -> Int
+migratoryBirds as = head $ minimumBy (flip $ comparing length) . group $ sort as
 
 main :: IO ()
 main = do
