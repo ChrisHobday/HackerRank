@@ -1,7 +1,7 @@
 # HackerRank
 [HackerRank](https://www.hackerrank.com) challenges written in [Haskell](https://www.haskell.org) using [Stack](https://docs.haskellstack.org/en/stable/README)
 
-To run them use 'stack run' or 'stack ghci' (for the interactive environment) from their application directory Ex.
+To run them use 'stack run' or 'stack ghci' (for the interactive environment) from their application directory
 ```console
 foo@bar:HackerRank/Functional Programming/HelloWorld$ stack run
 ```
