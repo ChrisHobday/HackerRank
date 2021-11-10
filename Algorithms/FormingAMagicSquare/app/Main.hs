@@ -35,11 +35,12 @@ mostFrequent as = snd (maximum [ (length bs, head bs) | bs <- group $ sort as ])
 magicConstant :: (Ord a, Num a) => [[a]] -> a
 magicConstant as = mostFrequent $ squareSums as
 
--- A fixed square number and the amount needed to fix it for a given broken number and magic constant
-fixNumber :: Num a => a -> a -> (a, a)
-fixNumber = undefined
-
-formingMagicSquare = undefined
+formingMagicSquare [] _ = 0
+formingMagicSquare (a:as) mc
+  | a == mc   = 0
+  | otherwise = abs (mc - a) + formingMagicSquare as mc
+  -- | head (squareSums as) == magicConstant as = 0
+  -- | otherwise                                = abs (magicConstant as - head (squareSums as)) + formingMagicSquare as --(tail $ head as : tail as)
 
 main :: IO ()
 main = do
