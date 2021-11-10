@@ -8,12 +8,12 @@ foo@bar:HackerRank/Functional Programming/HelloWorld$ stack run
 ```console
 foo@bar:HackerRank/Functional Programming/HelloWorld$ stack ghci
 ```
-Or manually compile, then run the programm with [GHC](https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/using.html)
+Or manually compile, then run the program with [GHC](https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/using.html)
 ```console
 foo@bar:HackerRank/Functional Programming/HelloWorld/app$ stack ghc Main.hs
 foo@bar:HackerRank/Functional Programming/HelloWorld/app$ ./Main
 ```
-Or
+Or without stack
 ```console
 foo@bar:HackerRank/Functional Programming/HelloWorld/app$ ghc Main.hs
 foo@bar:HackerRank/Functional Programming/HelloWorld/app$ ./Main
