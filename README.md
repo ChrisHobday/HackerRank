@@ -13,7 +13,7 @@ Or manually compile, then run the program with [GHC](https://downloads.haskell.o
 foo@bar:HackerRank/Functional Programming/HelloWorld/app$ stack ghc Main.hs
 foo@bar:HackerRank/Functional Programming/HelloWorld/app$ ./Main
 ```
-Or without stack
+(Without stack)
 ```console
 foo@bar:HackerRank/Functional Programming/HelloWorld/app$ ghc Main.hs
 foo@bar:HackerRank/Functional Programming/HelloWorld/app$ ./Main
