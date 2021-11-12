@@ -1,47 +1,49 @@
 module Main where
 
-import Data.List ( sum, transpose, group, sort )
+import Data.List ( transpose )
 
-x = [[1,2,3],[4,5,6],[7,8,9]] :: [[Int]]
+-- A starting 3x3 magic square
+startMagicSquare :: [[Int]]
+startMagicSquare = [[2,7,6],[9,5,1],[4,3,8]]
 
--- The sum of a given square's rows
-rowSums :: Num a => [[a]] -> [a]
-rowSums as = map sum as
+-- A 90 degree rotation of a given square
+rotate90 :: [[a]] -> [[a]]
+rotate90 = map reverse . transpose
 
--- The sum of a given square's columns
-columnSums :: Num a => [[a]] -> [a]
-columnSums ([]:_)     = []
-columnSums as         = foldr ((+) . head) 0 as : columnSums (map tail as)
+-- A reflection of a given square
+reflect :: [[a]] -> [[a]]
+reflect = transpose
 
--- The sum of a given square's diagonal staring at the top
-topDiagonalSum :: Num a => [[a]] -> a
-topDiagonalSum (a:as) = head a + (topDiagonalSum $ fmap tail as)
-topDiagonalSum []     = 0
+-- The rotated 3x3 magic squares
+rotatedMagicSquares :: [[[Int]]]
+rotatedMagicSquares = take 4 $ iterate rotate90 startMagicSquare
 
--- The sum of a given square's diagonal staring at the bottom
-bottomDiagonalSum :: Num a => [[a]] -> a
-bottomDiagonalSum (a:as) = last a + (bottomDiagonalSum $ fmap init as)
-bottomDiagonalSum []     = 0
+-- The reflected 3x3 magic squares
+reflectedMagicSquares :: [[[Int]]]
+reflectedMagicSquares = map reflect rotatedMagicSquares
 
--- The sums of a given square's columns, rows, and diagonals
-squareSums :: Num a => [[a]] -> [a]
-squareSums as = rowSums as ++ columnSums as ++ [topDiagonalSum as] ++ [bottomDiagonalSum as]
+-- All 3x3 magic squares
+allMagicSquares :: [[[Int]]]
+allMagicSquares = rotatedMagicSquares ++ reflectedMagicSquares
 
--- The most frequent occurence in a list
-mostFrequent :: Ord a => [a] -> a
-mostFrequent as = snd (maximum [ (length bs, head bs) | bs <- group $ sort as ])
+-- The cost of converting a given square to another given square
+cost :: [[Int]] -> [[Int]] -> Int
+cost s1 s2 = sum $ map abs $ zipWith (-) (concat s1) (concat s2)
 
--- The magical constant of a given magic square
-magicConstant :: (Ord a, Num a) => [[a]] -> a
-magicConstant as = mostFrequent $ squareSums as
+-- The minimum cost of converting a given sqaure to a magic square
+formingMagicSquare :: [[Int]] -> Int
+formingMagicSquare square = minimum $ map (cost square) allMagicSquares
 
-formingMagicSquare [] _ = 0
-formingMagicSquare (a:as) mc
-  | a == mc   = 0
-  | otherwise = abs (mc - a) + formingMagicSquare as mc
-  -- | head (squareSums as) == magicConstant as = 0
-  -- | otherwise                                = abs (magicConstant as - head (squareSums as)) + formingMagicSquare as --(tail $ head as : tail as)
+-- Read a given number of lines
+getLines :: Int -> IO [String]
+getLines 0 = return []
+getLines n = do
+    line <- getLine
+    rest <- getLines (n - 1)
+    return (line : rest)
 
 main :: IO ()
 main = do
-  putStrLn ""
+  squareTemp <- getLines 3 -- Read in square as string
+  let square = map (map (read :: String -> Int) . words) squareTemp -- Convert square to list of list of ints
+  print $ formingMagicSquare square -- Print the minimum cost of converting given square to magic square
