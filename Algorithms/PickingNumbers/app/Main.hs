@@ -1,15 +1,18 @@
 module Main where
 
-import Data.List ( subsequences )
+import Data.List ( group, sort )
 
--- A list of Bools representing whether the absolute difference between numbers in a given list is <= 1
-isDifferenceOf1 :: (Ord a, Num a) => [a] -> [Bool]
-isDifferenceOf1 []     = []
-isDifferenceOf1 (a:as) = map ((<= 1) . abs . (-) a) as ++ isDifferenceOf1 as
+-- The lengths of given lists (added together if the lists numbers are adjacent (within 1))
+adjacentLengths :: (Ord a, Num a) => [[a]] -> [Int]
+adjacentLengths []     = [0]
+adjacentLengths [a]    = [length a]
+adjacentLengths (a:b:as)
+  | abs (head a - head b) <= 1 = length a + length b : adjacentLengths (b:as)
+  | otherwise                  = length a : adjacentLengths (b:as)
 
 -- The maximum length subsequence of a given list of numbers where each number in the subsequence is within 1 of each other number
 pickingNumbers :: (Ord a, Num a) => [a] -> Int
-pickingNumbers numbers = maximum $ map length $ filter ((==) True . and . isDifferenceOf1) (subsequences numbers)
+pickingNumbers numbers = maximum $ adjacentLengths $ group $ sort numbers
 
 main :: IO ()
 main = do
