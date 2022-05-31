@@ -76,8 +76,8 @@ import Data.List ( group )
 -- ranks indexedHighscores (score:scores) = currentRank : ranks restIndexedHighscores scores
 --   where (currentRank, restIndexedHighscores) = rank indexedHighscores score
 
-ranked = [100, 100, 50, 40, 40, 20, 10]
-player = [5, 25, 50, 120]
+-- ranked = [100, 100, 50, 40, 40, 20, 10]
+-- player = [5, 25, 50, 120]
 
 -- A list of ranks for a given list of scores compared against a given indexed list of highscores sorted from lowest to highest
 -- Ex. ranks [(3, 25), (2, 50), (3, 100)] [5, 25, 150] = [4, 3, 1]
