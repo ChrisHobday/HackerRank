@@ -1,8 +1,7 @@
 module Main where
 
 hurdleRace :: Int -> [Int] -> Int
-hurdleRace k height = undefined
-    -- Write your code here
+hurdleRace maximumJumpHeight hurdleHeights = undefined
 
 main :: IO ()
 main = do
