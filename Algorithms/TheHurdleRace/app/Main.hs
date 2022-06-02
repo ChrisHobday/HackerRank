@@ -1,7 +1,9 @@
 module Main where
 
+-- Print the number of doses of potion the character must take to be able to jump all of the hurdles
+-- Ex. hurdleRace 7 [2, 5, 4, 5, 2] = 0
 hurdleRace :: Int -> [Int] -> Int
-hurdleRace maximumJumpHeight hurdleHeights = undefined
+hurdleRace maximumJumpHeight hurdleHeights = max 0 (maximum hurdleHeights - maximumJumpHeight)
 
 main :: IO ()
 main = do
