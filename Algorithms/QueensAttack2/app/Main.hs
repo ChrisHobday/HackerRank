@@ -8,9 +8,33 @@ readObstaclePosition = do
   (ir:ic:_) <- map read . words <$> getLine :: IO [Int]
   return (ir, ic)
 
+-- The number of squares a queen can attack in different directions (without obstacles)
+queensAttackUp n qc = n - qc
+
+queensAttackDown qc = qc - 1
+
+queensAttackLeft qr = qr - 1
+
+queensAttackRight n qr = n - qr
+
+queensAttackUpLeft n qr qc = min (queensAttackUp n qc) (queensAttackLeft qr)
+
+queensAttackUpRight n qr qc = min (queensAttackUp n qc) (queensAttackRight n qr)
+
+queensAttackDownLeft n qr qc = min (queensAttackDown qc) (queensAttackLeft qr)
+
+queensAttackDownRight n qr qc = min (queensAttackDown qc) (queensAttackRight n qr)
+
+-- The number of squares a queen can attack with a given board length and queen position (no obstacles)
+queensAttackAll :: Int -> Int -> Int -> Int
+queensAttackAll n qr qc = queensAttackUp n qc + queensAttackDown qc + 
+                          queensAttackLeft qr + queensAttackRight n qr + 
+                          queensAttackUpLeft n qr qc + queensAttackUpRight n qr qc + 
+                          queensAttackDownLeft n qr qc + queensAttackDownRight n qr qc
+
 -- The number of squares a queen can attack with a given board length, number of obstacles, queen row/column, and list of obstacles
 queensAttack :: Int -> Int -> Int -> Int -> [(Int, Int)] -> Int
-queensAttack n k r_q c_q obstacles = undefined
+queensAttack n k qr qc obstacles = undefined
   -- Write your code here
 
 main :: IO ()
