@@ -1,9 +1,12 @@
 module Main (main) where
 
+import Control.Monad ( replicateM )
+
 utopianTree :: Int -> Int
-utopianTree n = undefined
+utopianTree n = 0
 
 main :: IO ()
 main = do
-  growthCycles <- readLn :: IO Int -- Read number of growth cycles
-  print $ utopianTree growthCycles
+  numberTestCases <- readLn :: IO Int -- Read number of test cases to be entered
+  testCases <- replicateM numberTestCases (readLn :: IO Int) -- Read list of test cases for growth cycles
+  print $ map utopianTree testCases
