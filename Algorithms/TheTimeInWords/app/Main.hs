@@ -1,6 +1,10 @@
 module Main (main) where
 
-import Lib
+timeInWords :: Int -> Int -> String
+timeInWords hour minutes = "undefined"
 
 main :: IO ()
-main = someFunc
+main = do
+  hour <- readLn :: IO Int
+  minutes <- readLn :: IO Int
+  print $ timeInWords hour minutes

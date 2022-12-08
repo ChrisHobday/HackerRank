@@ -6,9 +6,9 @@ cabal-version: 1.12
 
 name:           TheTimeInWords
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/ChrisHobday/TheTimeInWords#readme>
-homepage:       https://github.com/ChrisHobday/TheTimeInWords#readme
-bug-reports:    https://github.com/ChrisHobday/TheTimeInWords/issues
+description:    Please see the README on GitHub at <https://github.com/ChrisHobday/HackerRank/tree/main/Algorithms/TheTimeInWords#readme>
+homepage:       https://github.com/ChrisHobday/HackerRank#readme
+bug-reports:    https://github.com/ChrisHobday/HackerRank/issues
 author:         Chris Hobday
 maintainer:     Hobday.Chris@protonmail.com
 copyright:      2022 Chris Hobday
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/ChrisHobday/TheTimeInWords
+  location: https://github.com/ChrisHobday/HackerRank
 
 library
   exposed-modules:
