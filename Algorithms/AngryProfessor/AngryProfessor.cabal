@@ -6,7 +6,7 @@ cabal-version: 1.12
 
 name:           AngryProfessor
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/ChrisHobday/AngryProfessor#readme>
+description:    Please see the README on GitHub at <https://github.com/ChrisHobday/HackerRank/tree/main/Algorithms/AngryProfessor#readme>
 homepage:       https://github.com/ChrisHobday/AngryProfessor#readme
 bug-reports:    https://github.com/ChrisHobday/AngryProfessor/issues
 author:         Chris Hobday
