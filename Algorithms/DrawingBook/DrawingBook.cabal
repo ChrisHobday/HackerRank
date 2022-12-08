@@ -6,9 +6,9 @@ cabal-version: 1.12
 
 name:           DrawingBook
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/ChrisHobday/DrawingBook#readme>
-homepage:       https://github.com/ChrisHobday/DrawingBook#readme
-bug-reports:    https://github.com/ChrisHobday/DrawingBook/issues
+description:    Please see the README on GitHub at <https://github.com/ChrisHobday/HackerRank/tree/main/Algorithms/DrawingBook#readme>
+homepage:       https://github.com/ChrisHobday/HackerRank#readme
+bug-reports:    https://github.com/ChrisHobday/HackerRank/issues
 author:         Chris Hobday
 maintainer:     hobday.chris@protonmail.com
 copyright:      Copyright: (c) 2021 Chris Hobday
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/ChrisHobday/DrawingBook
+  location: https://github.com/ChrisHobday/HackerRank
 
 library
   other-modules:
