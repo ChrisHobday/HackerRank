@@ -1,5 +1,5 @@
 f :: Int -> [Int] -> [Int]
-f n arr = undefined --Fill up this function
+f n arr = filter (< n) arr
 
 -- The Input/Output section. You do not need to change or modify this part
 main = do 
