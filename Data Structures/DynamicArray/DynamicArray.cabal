@@ -6,12 +6,12 @@ cabal-version: 1.12
 
 name:           DynamicArray
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/DynamicArray#readme>
-homepage:       https://github.com/githubuser/DynamicArray#readme
-bug-reports:    https://github.com/githubuser/DynamicArray/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2021 Author name here
+description:    Please see the README on GitHub at <https://github.com/ChrisHobday/HackerRank/tree/main/Data%20Structures/DynamicArray#readme>
+homepage:       https://github.com/ChrisHobday/HackerRank#readme
+bug-reports:    https://github.com/ChrisHobday/HackerRank/issues
+author:         Chris Hobday
+maintainer:     hobday.chris@protonmail.com
+copyright:      Copyright: (c) 2021 Chris Hobday
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/DynamicArray
+  location: https://github.com/ChrisHobday/HackerRank
 
 library
   other-modules:

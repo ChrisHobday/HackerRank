@@ -15,8 +15,13 @@ lastAnswer = 0
 idx :: Int -> Int -> Int
 idx x n = (x `xor` lastAnswer) `mod` n
 
-Query1 x y n arr = arr1:y:arr2
-  where (arr1, arr2) = splitAt (idx x n)
+query1 x y n arr = arr1 ++ [ele ++ [y]] ++ arr2
+  where (arr1, ele:arr2) = splitAt (idx x n) arr
+
+query2 x y n arr = undefined
+
+dynamicArray :: Int -> [Int] -> String
+dynamicArray n queries = ""
 
 -- idx :: Int -> Int -> Int -> Int
 -- idx queryValue1 lastAnswer arraySize = (queryValue1 `xor` lastAnswer) `mod` arraySize
@@ -34,4 +39,7 @@ Query1 x y n arr = arr1:y:arr2
 --   head $ array !! idx queryValue1 lastAnswer arraySize
 
 main :: IO ()
-main = print ""
+main = do
+  (n:q:_) <- map read . words <$> getLine :: IO [Int]
+  print n
+  print q
