@@ -12,13 +12,12 @@ array = [[],[]]
 -- lastAnswer :: Int
 -- lastAnswer = 0
 
-idx :: Int -> Int -> Int
-idx x n = (x `xor` lastAnswer) `mod` n
+idx x n lastAnswer = (x `xor` lastAnswer) `mod` n
 
-query1 x y n arr = arr1 ++ [ele ++ [y]] ++ arr2
-  where (arr1, ele:arr2) = splitAt (idx x n) arr
+query1 x y n lastAnswer arr = arr1 ++ [ele ++ [y]] ++ arr2
+  where (arr1, ele:arr2) = splitAt (idx x n lastAnswer) arr
 
-query2 x y n arr = undefined
+query2 x y n lastAnswer arr = undefined
 
 dynamicArray :: Int -> [Int] -> String
 dynamicArray n queries = ""
