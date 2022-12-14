@@ -9,8 +9,8 @@ array = [[],[]]
 -- array :: Vector Vector Int
 -- array = V.replicate 5 (V.replicate 5 0)
 
-lastAnswer :: Int
-lastAnswer = 0
+-- lastAnswer :: Int
+-- lastAnswer = 0
 
 idx :: Int -> Int -> Int
 idx x n = (x `xor` lastAnswer) `mod` n
