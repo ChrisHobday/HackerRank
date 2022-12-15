@@ -2,43 +2,32 @@ module Main where
 
 -- import Data.Vector as V
 import Data.Bits ( xor )
+import Control.Monad ( replicateM )
 
-array :: [[Int]]
-array = [[],[]]
-
--- array :: Vector Vector Int
--- array = V.replicate 5 (V.replicate 5 0)
-
--- lastAnswer :: Int
--- lastAnswer = 0
+arrays n = replicate n []
 
 idx x n lastAnswer = (x `xor` lastAnswer) `mod` n
 
 query1 x y n lastAnswer arr = arr1 ++ [ele ++ [y]] ++ arr2
   where (arr1, ele:arr2) = splitAt (idx x n lastAnswer) arr
 
-query2 x y n lastAnswer arr = undefined
+query2 x y n lastAnswer arr = arr !! idx' !! (y `mod` length (arr !! idx'))
+  where idx' = idx x n lastAnswer
 
-dynamicArray :: Int -> [Int] -> String
-dynamicArray n queries = ""
+dynamicArray _ [] = []
+dynamicArray n ((q:x:y:_):queries) = queries
 
--- idx :: Int -> Int -> Int -> Int
--- idx queryValue1 lastAnswer arraySize = (queryValue1 `xor` lastAnswer) `mod` arraySize
 
--- onceThrough :: Vector Int -> Int -> Int -> Int -> Int -> Vector Int
--- onceThrough array queryValue1 lastAnswer arraySize queryValue2 = array // [(idx queryValue1 lastAnswer arraySize,queryValue2)]
-
--- onceThrough :: [[Int]] -> Int -> Int -> Int -> Int -> [[Int]]
--- onceThrough array queryValue1 lastAnswer arraySize queryValue2 = 
---   arraySplit1 ++ (yArray ++ [queryValue2]) : arraySplit2
---   where (arraySplit1,yArray:arraySplit2) = splitAt (idx queryValue1 lastAnswer arraySize) array
-
--- onceThrough2 :: [[Int]] -> Int -> Int -> Int -> Int -> Int
--- onceThrough2 array queryValue1 lastAnswer arraySize queryValue2 = 
---   head $ array !! idx queryValue1 lastAnswer arraySize
+-- | null queries = ""
+-- | q == 1       = "\nq1" ++ (dynamicArray n queries)
+-- | otherwise    = "\nq2" ++ (dynamicArray n queries)
 
 main :: IO ()
 main = do
   (n:q:_) <- map read . words <$> getLine :: IO [Int]
   print n
   print q
+  queries <- replicateM q $ do
+    map read . words <$> getLine :: IO [Int]
+  -- putStrLn $ dynamicArray n queries
+  return ()
