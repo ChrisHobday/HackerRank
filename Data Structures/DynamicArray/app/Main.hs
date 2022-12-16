@@ -5,6 +5,8 @@ import Data.List as L
 import Data.Bits ( xor, Bits )
 import Control.Monad  as M( replicateM )
 
+-- Note: Something is broken either with this solution or the challenge itself which causes some of the test cases with high amounts of queries to produce runtime errors on the website, but work fine when testing locally
+
 -- An array of n arrays
 arrays n = V.replicate n V.empty
 
