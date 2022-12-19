@@ -2,12 +2,6 @@ module Main where
 
 import Control.Monad ( replicateM )
 
--- Read obstacle (row, column)
-readObstaclePosition :: IO (Int,Int)
-readObstaclePosition = do
-  (ir:ic:_) <- map read . words <$> getLine :: IO [Int]
-  return (ir, ic)
-
 -- The number of squares a queen can attack in different directions (without obstacles)
 queensAttackUp n qc = n - qc
 queensAttackDown qc = qc - 1
@@ -51,5 +45,6 @@ main :: IO ()
 main = do
   (n:k:_) <- map read . words <$> getLine :: IO [Int] -- Read board length and number of obstacles and bind them to n and k respectively
   (qr:qc:_) <- map read . words <$> getLine :: IO [Int] -- Read queen's row and column position and bind them to qr and qc respectively
-  obstacles <- replicateM k readObstaclePosition -- Read k obstacle positions
+  obstacles <- replicateM k $ do -- Read k obstacle positions
+    map read . words <$> getLine :: IO [Int]
   print $ queensAttack n k qr qc obstacles -- Print number of squares queen can attack with given board length, number of obstacles, queen row/column, and list of obstacles
