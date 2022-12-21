@@ -2,6 +2,38 @@ module Main where
 
 import Control.Monad ( replicateM )
 
+limits qx qy ((ox, oy):obs) (rl, ll, ul, dl, url, drl, lul, ldl)
+  -- Obstacle same row as queen
+  | oy == qy =
+    case ox > qx of
+      -- Obstacle right of queen
+      True  -> min rl ox
+      -- Obstacle left of queen
+      False -> max ll ox
+  -- Obstacle same column as queen
+  | ox == qx =
+    case oy > qy of
+      -- Obstacle above queen
+      True  -> min ul oy
+      -- Obstacle below queen
+      False -> max ul oy
+  -- Obstacle diagonal to queen
+  | abs (ox - qx) == abs (oy - qy)
+    case ox > qx of
+      -- Obstacle right of queen
+      True  -> case oy > qy of
+        -- Obstacle above queen
+        True  -> min url (ox + oy / 2)
+        -- Obstacle below queen
+        False ->
+      -- Obstacle left of queen
+      False -> case oy > qy of
+        -- Obstacle above queen
+        True  ->
+        -- Obstacle below queen
+        False ->
+
+
 -- The number of squares a queen can attack in different directions (without obstacles)
 queensAttackUp n qc = n - qc
 queensAttackDown qc = qc - 1
