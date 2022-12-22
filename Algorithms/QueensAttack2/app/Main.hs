@@ -33,6 +33,8 @@ limits qx qy ((ox, oy):obs) (rl, ll, ul, dl, url, drl, lul, ldl)
         -- Obstacle below queen
         False ->
 
+offset ::
+
 
 -- The number of squares a queen can attack in different directions (without obstacles)
 queensAttackUp n qc = n - qc
