@@ -10,8 +10,7 @@ defaultObstacles n queenX queenY = ( (queenX + spaceRight + 1, queenY)
                                    , (queenX + spaceUpRight + 1, queenY + spaceUpRight + 1)
                                    , (queenX - spaceUpLeft - 1, queenY + spaceUpLeft + 1)
                                    , (queenX - spaceDownLeft - 1, queenY - spaceDownLeft - 1)
-                                   , (queenX + spaceDownRight + 1, queenY - spaceDownRight - 1)
-                                   )
+                                   , (queenX + spaceDownRight + 1, queenY - spaceDownRight - 1) )
   where spaceRight     = n - queenX
         spaceUp        = n - queenY
         spaceLeft      = queenX - 1
@@ -21,6 +20,7 @@ defaultObstacles n queenX queenY = ( (queenX + spaceRight + 1, queenY)
         spaceDownLeft  = min spaceDown spaceLeft
         spaceDownRight = min spaceDown spaceRight
 
+-- The number of squares a queen can attack
 attackableSquares queenX queenY ( (obstacleRightX,obstacleRightY)
                                 , (obstacleUpX,obstacleUpY)
                                 , (obstacleLeftX, obstacleLeftY)
@@ -28,8 +28,7 @@ attackableSquares queenX queenY ( (obstacleRightX,obstacleRightY)
                                 , (obstacleUpRightX, obstacleUpRightY)
                                 , (obstacleUpLeftX, obstacleUpLeftY)
                                 , (obstacleDownLeftX, obstacleDownLeftY)
-                                , (obstacleDownRightX, obstacleDownRightY)
-                                )
+                                , (obstacleDownRightX, obstacleDownRightY))
   = attackableSquaresRight + attackableSquaresUp + attackableSquaresLeft + attackableSquaresDown + attackableSquaresUpRight + attackableSquaresUpLeft + attackableSquaresDownLeft + attackableSquaresDownRight
   where attackableSquaresRight     = obstacleRightX - queenX - 1
         attackableSquaresUp        = obstacleUpY - queenY - 1
@@ -40,76 +39,119 @@ attackableSquares queenX queenY ( (obstacleRightX,obstacleRightY)
         attackableSquaresDownLeft  = queenX - obstacleDownLeftX - 1
         attackableSquaresDownRight = queenY - obstacleDownRightY - 1
 
--- limits queenX queenY ((ox, oy):obs) (rl, ll, ul, dl, url, drl, lul, ldl)
---   -- Obstacle same row as queen
---   | oy == queenY =
---     case ox > queenX of
---       -- Obstacle right of queen
---       True  -> min rl ox
---       -- Obstacle left of queen
---       False -> max ll ox
---   -- Obstacle same column as queen
---   | ox == queenX =
---     case oy > queenY of
---       -- Obstacle above queen
---       True  -> min ul oy
---       -- Obstacle below queen
---       False -> max ul oy
---   -- Obstacle diagonal to queen
---   | abs (ox - queenX) == abs (oy - queenY)
---     case ox > queenX of
---       -- Obstacle right of queen
---       True  -> case oy > queenY of
---         -- Obstacle above queen
---         True  -> min url (ox + oy / 2)
---         -- Obstacle below queen
---         False ->
---       -- Obstacle left of queen
---       False -> case oy > queenY of
---         -- Obstacle above queen
---         True  ->
---         -- Obstacle below queen
---         False ->
+-- Update the closest obstacles in the queens attack path, relative to the queens position in all 8 directions
+updateObstacles _ _ [] finalObstacles = finalObstacles
+updateObstacles queenX queenY ((obstacleX, obstacleY):obstacles) ( obstacleRight
+                                                                 , obstacleUp
+                                                                 , obstacleLeft
+                                                                 , obstacleDown
+                                                                 , obstacleUpRight
+                                                                 , obstacleUpLeft
+                                                                 , obstacleDownLeft
+                                                                 , obstacleDownRight )
+  | obstacleY == queenY =
+  -- Obstacle same row as queen
+    if obstacleX > queenX then
+      -- Obstacle right of queen
+      updateObstacles queenX queenY obstacles ( min obstacleRight (obstacleX, obstacleY)
+                                              , obstacleUp
+                                              , obstacleLeft
+                                              , obstacleDown
+                                              , obstacleUpRight
+                                              , obstacleUpLeft
+                                              , obstacleDownLeft
+                                              , obstacleDownRight )
+      else
+      -- Obstacle left of queen
+      updateObstacles queenX queenY obstacles ( obstacleRight
+                                              , obstacleUp
+                                              , max obstacleLeft (obstacleX, obstacleY)
+                                              , obstacleDown
+                                              , obstacleUpRight
+                                              , obstacleUpLeft
+                                              , obstacleDownLeft
+                                              , obstacleDownRight )
+  | obstacleX == queenX =
+  -- Obstacle same column as queen
+    if obstacleY > queenY then
+      -- Obstacle above queen
+      updateObstacles queenX queenY obstacles ( obstacleRight
+                                              , min obstacleUp (obstacleX, obstacleY)
+                                              , obstacleLeft
+                                              , obstacleDown
+                                              , obstacleUpRight
+                                              , obstacleUpLeft
+                                              , obstacleDownLeft
+                                              , obstacleDownRight )
+      else
+      -- Obstacle below queen
+      updateObstacles queenX queenY obstacles ( obstacleRight
+                                              , obstacleUp
+                                              , obstacleLeft
+                                              , max obstacleDown (obstacleX, obstacleY)
+                                              , obstacleUpRight
+                                              , obstacleUpLeft
+                                              , obstacleDownLeft
+                                              , obstacleDownRight )
+  | abs (obstacleX - queenX) == abs (obstacleY - queenY) =
+  -- Obstacle diagonal to queen
+    if obstacleX > queenX then
+      -- Obstacle right of queen
+      if obstacleY > queenY then
+        -- Obstacle above queen
+        updateObstacles queenX queenY obstacles ( obstacleRight
+                                                , obstacleUp
+                                                , obstacleLeft
+                                                , obstacleDown
+                                                , min obstacleUpRight (obstacleX, obstacleY)
+                                                , obstacleUpLeft
+                                                , obstacleDownLeft
+                                                , obstacleDownRight )
+        else
+        -- Obstacle below queen
+        updateObstacles queenX queenY obstacles ( obstacleRight
+                                                , obstacleUp
+                                                , obstacleLeft
+                                                , obstacleDown
+                                                , obstacleUpRight
+                                                , obstacleUpLeft
+                                                , obstacleDownLeft
+                                                , min obstacleDownRight (obstacleX, obstacleY) )
+      else
+        -- Obstacle left of queen
+        if obstacleY > queenY then
+          -- Obstacle above queen
+          updateObstacles queenX queenY obstacles ( obstacleRight
+                                                  , obstacleUp
+                                                  , obstacleLeft
+                                                  , obstacleDown
+                                                  , obstacleUpRight
+                                                  , max obstacleUpLeft (obstacleX, obstacleY)
+                                                  , obstacleDownLeft
+                                                  , obstacleDownRight )
+        else
+          -- Obstacle below queen
+          updateObstacles queenX queenY obstacles ( obstacleRight
+                                                  , obstacleUp
+                                                  , obstacleLeft
+                                                  , obstacleDown
+                                                  , obstacleUpRight
+                                                  , obstacleUpLeft
+                                                  , max obstacleDownLeft (obstacleX, obstacleY)
+                                                  , obstacleDownRight )
+  -- Otherwise (obstacle isn't in queen's attack path)
+  | otherwise = updateObstacles queenX queenY obstacles ( obstacleRight
+                                                        , obstacleUp
+                                                        , obstacleLeft
+                                                        , obstacleDown
+                                                        , obstacleUpRight
+                                                        , obstacleUpLeft
+                                                        , obstacleDownLeft
+                                                        , obstacleDownRight )
 
-
--- The number of squares a queen can attack in different directions (without obstacles)
-queensAttackUp n qc = n - qc
-queensAttackDown qc = qc - 1
-queensAttackLeft qr = qr - 1
-queensAttackRight n qr = n - qr
-queensAttackUpLeft n qr qc = min (queensAttackUp n qc) (queensAttackLeft qr)
-queensAttackUpRight n qr qc = min (queensAttackUp n qc) (queensAttackRight n qr)
-queensAttackDownLeft n qr qc = min (queensAttackDown qc) (queensAttackLeft qr)
-queensAttackDownRight n qr qc = min (queensAttackDown qc) (queensAttackRight n qr)
-
--- The number of squares a queen can attack with queen row/column, list of obstacles, and tuple of attacks in each direction
-summedAttacks :: Int -> Int -> [(Int, Int)] -> (Int, Int, Int, Int, Int, Int, Int, Int) -> Int
--- No obstacles
-summedAttacks _ _ [] (u, d, l, r, ul, ur, dl, dr) = u + d + l + r + ul + ur + dl + dr
-summedAttacks qr qc ((or, oc):obs) obstacleInterference@(u, d, l, r, ul, ur, dl, dr)
-  -- Obstacle effects attacks up
-  | oc == qc && or > qr           = summedAttacks qr qc obs (min u (or - qr - 1), d, l, r, ul, ur, dl, dr)
-  -- Obstacle effects attacks down
-  | oc == qc && or < qr           = summedAttacks qr qc obs (u, min d (qr - or - 1), l, r, ul, ur, dl, dr)
-  -- Obstacle effects attacks left
-  | or == qr && oc < qc           = summedAttacks qr qc obs (u, d, min l (qc - oc - 1), r, ul, ur, dl, dr)
-  -- Obstacle effects attacks right
-  | or == qr && oc > qc           = summedAttacks qr qc obs (u, d, l, min r (oc - qc - 1), ul, ur, dl, dr)
-  -- Obstacle effects attacks up and left
-  | oc < qc && or + oc == qr + qc = summedAttacks qr qc obs (u, d, l, r, min ul (or - qr - 1), ur, dl, dr)
-  -- Obstacle effects attacks up and right
-  | oc > qc && or - qr == oc - qc = summedAttacks qr qc obs (u, d, l, r, ul, min ur (or - qr - 1), dl, dr)
-  -- Obstacle effects attacks down and left
-  | or - qr == oc - qc            = summedAttacks qr qc obs (u, d, l, r, ul, ur, min dl (qc - oc - 1), dr)
-  -- Obstacle effects attacks down and right
-  | or + oc == qr + qc            = summedAttacks qr qc obs (u, d, l, r, ul, ur, dl, min dr (oc - qc - 1))
-  -- Obstacle doesn't effect attacks
-  | otherwise                     = summedAttacks qr qc obs obstacleInterference
-
--- The number of squares a queen can attack with a given board length, number of obstacles, queen row/column, and list of obstacles
+-- The number of squares a queen can attack with a given board length, number of obstacles, queen x/y, and list of obstacles
 -- Ex. queensAttack 4 0 4 4 [] = 9
-queensAttack :: Int -> Int -> Int -> Int -> [(Int, Int)] -> Int
-queensAttack n k qr qc obstacles = summedAttacks qr qc obstacles (queensAttackUp n qc, queensAttackDown qc, queensAttackLeft qr, queensAttackRight n qr, queensAttackUpLeft n qr qc, queensAttackUpRight n qr qc, queensAttackDownLeft n qr qc, queensAttackDownRight n qr qc)
+queensAttack n _ queenX queenY obstacles = attackableSquares queenX queenY $ updateObstacles queenX queenY obstacles $ defaultObstacles n queenX queenY
 
 main :: IO ()
 main = do
