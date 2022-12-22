@@ -2,38 +2,74 @@ module Main where
 
 import Control.Monad ( replicateM )
 
-limits qx qy ((ox, oy):obs) (rl, ll, ul, dl, url, drl, lul, ldl)
-  -- Obstacle same row as queen
-  | oy == qy =
-    case ox > qx of
-      -- Obstacle right of queen
-      True  -> min rl ox
-      -- Obstacle left of queen
-      False -> max ll ox
-  -- Obstacle same column as queen
-  | ox == qx =
-    case oy > qy of
-      -- Obstacle above queen
-      True  -> min ul oy
-      -- Obstacle below queen
-      False -> max ul oy
-  -- Obstacle diagonal to queen
-  | abs (ox - qx) == abs (oy - qy)
-    case ox > qx of
-      -- Obstacle right of queen
-      True  -> case oy > qy of
-        -- Obstacle above queen
-        True  -> min url (ox + oy / 2)
-        -- Obstacle below queen
-        False ->
-      -- Obstacle left of queen
-      False -> case oy > qy of
-        -- Obstacle above queen
-        True  ->
-        -- Obstacle below queen
-        False ->
+-- The default position of each of the 8 obstacles (in this case the edge of the chess board) in the order of; right, up, left, down, upRight, upLeft, downLeft, downRight
+defaultObstacles n queenX queenY = ( (queenX + spaceRight + 1, queenY)
+                                   , (queenX, queenY + spaceUp + 1)
+                                   , (queenX - spaceLeft - 1, queenY)
+                                   , (queenX, queenY - spaceDown - 1)
+                                   , (queenX + spaceUpRight + 1, queenY + spaceUpRight + 1)
+                                   , (queenX - spaceUpLeft - 1, queenY + spaceUpLeft + 1)
+                                   , (queenX - spaceDownLeft - 1, queenY - spaceDownLeft - 1)
+                                   , (queenX + spaceDownRight + 1, queenY - spaceDownRight - 1)
+                                   )
+  where spaceRight     = n - queenX
+        spaceUp        = n - queenY
+        spaceLeft      = queenX - 1
+        spaceDown      = queenY - 1
+        spaceUpRight   = min spaceUp spaceRight
+        spaceUpLeft    = min spaceUp spaceLeft
+        spaceDownLeft  = min spaceDown spaceLeft
+        spaceDownRight = min spaceDown spaceRight
 
-offset ::
+attackableSquares queenX queenY ( (obstacleRightX,obstacleRightY)
+                                , (obstacleUpX,obstacleUpY)
+                                , (obstacleLeftX, obstacleLeftY)
+                                , (obstacleDownX, obstacleDownY)
+                                , (obstacleUpRightX, obstacleUpRightY)
+                                , (obstacleUpLeftX, obstacleUpLeftY)
+                                , (obstacleDownLeftX, obstacleDownLeftY)
+                                , (obstacleDownRightX, obstacleDownRightY)
+                                )
+  = attackableSquaresRight + attackableSquaresUp + attackableSquaresLeft + attackableSquaresDown + attackableSquaresUpRight + attackableSquaresUpLeft + attackableSquaresDownLeft + attackableSquaresDownRight
+  where attackableSquaresRight     = obstacleRightX - queenX - 1
+        attackableSquaresUp        = obstacleUpY - queenY - 1
+        attackableSquaresLeft      = queenX - obstacleLeftX - 1
+        attackableSquaresDown      = queenY - obstacleDownY - 1
+        attackableSquaresUpRight   = obstacleUpRightX - queenX - 1
+        attackableSquaresUpLeft    = obstacleUpLeftY - queenY - 1
+        attackableSquaresDownLeft  = queenX - obstacleDownLeftX - 1
+        attackableSquaresDownRight = queenY - obstacleDownRightY - 1
+
+-- limits queenX queenY ((ox, oy):obs) (rl, ll, ul, dl, url, drl, lul, ldl)
+--   -- Obstacle same row as queen
+--   | oy == queenY =
+--     case ox > queenX of
+--       -- Obstacle right of queen
+--       True  -> min rl ox
+--       -- Obstacle left of queen
+--       False -> max ll ox
+--   -- Obstacle same column as queen
+--   | ox == queenX =
+--     case oy > queenY of
+--       -- Obstacle above queen
+--       True  -> min ul oy
+--       -- Obstacle below queen
+--       False -> max ul oy
+--   -- Obstacle diagonal to queen
+--   | abs (ox - queenX) == abs (oy - queenY)
+--     case ox > queenX of
+--       -- Obstacle right of queen
+--       True  -> case oy > queenY of
+--         -- Obstacle above queen
+--         True  -> min url (ox + oy / 2)
+--         -- Obstacle below queen
+--         False ->
+--       -- Obstacle left of queen
+--       False -> case oy > queenY of
+--         -- Obstacle above queen
+--         True  ->
+--         -- Obstacle below queen
+--         False ->
 
 
 -- The number of squares a queen can attack in different directions (without obstacles)
@@ -80,5 +116,6 @@ main = do
   (n:k:_) <- map read . words <$> getLine :: IO [Int] -- Read board length and number of obstacles and bind them to n and k respectively
   (qr:qc:_) <- map read . words <$> getLine :: IO [Int] -- Read queen's row and column position and bind them to qr and qc respectively
   obstacles <- replicateM k $ do -- Read k obstacle positions
-    map read . words <$> getLine :: IO [Int]
+    (x:y:_) <- map read . words <$> getLine :: IO [Int]
+    return (x, y)
   print $ queensAttack n k qr qc obstacles -- Print number of squares queen can attack with given board length, number of obstacles, queen row/column, and list of obstacles
