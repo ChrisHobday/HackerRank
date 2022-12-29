@@ -3,11 +3,12 @@ module Main (main) where
 import Data.List ( mapAccumL
                  , sortBy )
 -- import Data.
+import Data.Tree
 
 -- A data model representing a binary tree
-data Tree a = Leaf
-            | Node a (Tree a) (Tree a)
-  deriving ( Show )
+-- data Tree a = Empty
+--             | Node a (Tree a) (Tree a)
+--   deriving ( Show )
 
 -- The first character, number of occurences of the first character in a given string, and the leftover characters after all occurences of the first character are removed
 -- Example: countFirstAndRemove "abbac" = ('a', 2, "bbc")
@@ -28,9 +29,17 @@ countAll string
 -- Example: sortCharFrequencies [('a',2),('b',2),('c',1)] = [('c',1),('a',2),('b',2)]
 sortCharFrequencies charFrequencies = sortBy (\(_,a) (_,b) -> compare a b) charFrequencies
 
+buildNode x = if 2*x + 1 > 7 then (x, []) else (x, [2*x, 2*x+1])
+
 -- constructTree :: [(Char, Int)] -> Tree (Maybe Char, Int)
-constructTree ((char, occurences) : (char', occurences') : charFrequencies) = Node (Nothing, combinedOccurences) (Node (Just char, occurences) Leaf Leaf) (Node (Just char', occurences') Leaf Leaf)
-  where combinedOccurences = occurences + occurences'
+-- constructTree ((char, occurences) : (char', occurences') : charFrequencies) = constructTree ((Nothing, combinedOccurences) : charFrequencies) (Node (Just char, occurences) Empty Empty) (Node (Just char', occurences') Empty Empty)
+--   where combinedOccurences = occurences + occurences'
+--         node [] = Empty
+
+
+-- constructTree :: [(Char, Int)] -> Tree (Maybe Char, Int)
+-- constructTree ((char, occurences) : (char', occurences') : charFrequencies) = Node (Nothing, combinedOccurences) (Node (Just char, occurences) Empty Empty) (Node (Just char', occurences') Empty Empty)
+--   where combinedOccurences = occurences + occurences'
 
 
 main :: IO ()
