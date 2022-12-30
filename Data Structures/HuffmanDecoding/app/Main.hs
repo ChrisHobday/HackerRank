@@ -29,7 +29,18 @@ countAll string
 -- Example: sortCharFrequencies [('a',2),('b',2),('c',1)] = [('c',1),('a',2),('b',2)]
 sortCharFrequencies charFrequencies = sortBy (\(_,a) (_,b) -> compare a b) charFrequencies
 
-buildNode x = if 2*x + 1 > 7 then (x, []) else (x, [2*x, 2*x+1])
+-- buildNode x = if 2*x + 1 > 7 then (x, []) else (x, [2*x, 2*x+1])
+-- buildNode x = if 2*x + 1 > 7 then (x, []) else (x, [2*x, 2*x+1])
+
+buildNode x = do
+  if 2*x + 1 > 7 then
+    return (x, [])
+  else
+    return (x, [2*x, 2*x+1])
+
+constructTree :: [(Char, Int)] -> Tree (Maybe Char, Int)
+constructTree ((char, occurences) : (char', occurences') : charFrequencies) = 
+  where siblingNodes = [Node (Just char, occurences), Node (Just char', occurences')]
 
 -- constructTree :: [(Char, Int)] -> Tree (Maybe Char, Int)
 -- constructTree ((char, occurences) : (char', occurences') : charFrequencies) = constructTree ((Nothing, combinedOccurences) : charFrequencies) (Node (Just char, occurences) Empty Empty) (Node (Just char', occurences') Empty Empty)
