@@ -4,6 +4,7 @@ import Data.List ( mapAccumL
                  , sortBy )
 -- import Data.
 import Data.Tree
+import Data.Maybe
 
 -- A data model representing a binary tree
 -- data Tree a = Empty
@@ -32,15 +33,16 @@ sortCharFrequencies charFrequencies = sortBy (\(_,a) (_,b) -> compare a b) charF
 -- buildNode x = if 2*x + 1 > 7 then (x, []) else (x, [2*x, 2*x+1])
 -- buildNode x = if 2*x + 1 > 7 then (x, []) else (x, [2*x, 2*x+1])
 
-buildNode x = do
-  if 2*x + 1 > 7 then
-    return (x, [])
-  else
-    return (x, [2*x, 2*x+1])
+eT :: Maybe (Either (Tree (Maybe Char, Int)) (Tree (Maybe Char, Int))) -> String
+eT tree = either (\t -> "Lefty loosy " ++ show t) (\t -> "Righty tighty " ++ show t) (fromJust tree)
 
-constructTree :: [(Char, Int)] -> Tree (Maybe Char, Int)
-constructTree ((char, occurences) : (char', occurences') : charFrequencies) = 
-  where siblingNodes = [Node (Just char, occurences), Node (Just char', occurences')]
+-- constructTree :: [(Char, Int)] -> Maybe (Either (Tree (Maybe Char, Int)) (Tree (Maybe Char, Int))) -> Tree (Maybe Char, Int)
+-- constructTree ((char, occurences) : (char', occurences') : charFrequencies) tree
+--   | [] _      = tree
+--   | otherwise = 
+--   where LeftNode  = Node (Just char, occurences)
+--         RightNode = Node (char', occurences')
+--         RootNode  = Node (Nothing, occurences + occurences') [LeftNode, RightNode]
 
 -- constructTree :: [(Char, Int)] -> Tree (Maybe Char, Int)
 -- constructTree ((char, occurences) : (char', occurences') : charFrequencies) = constructTree ((Nothing, combinedOccurences) : charFrequencies) (Node (Just char, occurences) Empty Empty) (Node (Just char', occurences') Empty Empty)
