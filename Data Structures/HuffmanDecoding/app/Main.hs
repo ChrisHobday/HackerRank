@@ -2,14 +2,12 @@ module Main (main) where
 
 import Data.List ( mapAccumL
                  , sortBy )
--- import Data.
-import Data.Tree
-import Data.Maybe
-
--- A data model representing a binary tree
--- data Tree a = Empty
---             | Node a (Tree a) (Tree a)
---   deriving ( Show )
+import Data.Tree ( Tree ( Node
+                        , rootLabel )
+                 , drawTree
+                 , flatten
+                 , foldTree )
+import Data.Maybe ()
 
 -- The first character, number of occurences of the first character in a given string, and the leftover characters after all occurences of the first character are removed
 -- Example: countFirstAndRemove "abbac" = ('a', 2, "bbc")
@@ -28,6 +26,7 @@ countAll string
 
 -- A list of character frequencies sorted by least to most frequent
 -- Example: sortCharFrequencies [('a',2),('b',2),('c',1)] = [('c',1),('a',2),('b',2)]
+sortCharFrequencies :: Ord a1 => [(a2, a1)] -> [(a2, a1)]
 sortCharFrequencies charFrequencies = sortBy (\(_,a) (_,b) -> compare a b) charFrequencies
 
 -- A Huffman Decoding tree constructed from a given list of character, occurence pairs and maybe an existing tree
@@ -38,31 +37,22 @@ constructTree [] (Just tree)                                                    
 -- There is no character frequencies and no tree
 constructTree [] Nothing                                                            = Node (Nothing, 0) []
 -- There is at least one character frequency and a tree
--- constructTree ((char, occurences) : charFrequencies) (Just tree)@(Node (_, occurences') _) = tree
 constructTree ((char, occurences) : charFrequencies) (Just tree@(Node (_, occurences') _))
   -- Given tree should be on left
-  | occurences >= occurences' = constructTree charFrequencies (Just (Node (Nothing, occurences + occurences') [tree, Node (Just char, occurences) []]))
+  | occurences >= occurences'                                                       = constructTree charFrequencies (Just (Node (Nothing, occurences + occurences') [tree, Node (Just char, occurences) []]))
   -- Given tree should be on left
-  | otherwise                 = constructTree charFrequencies (Just (Node (Nothing, occurences + occurences') [Node (Just char, occurences) [], tree]))
+  | otherwise                                                                       = constructTree charFrequencies (Just (Node (Nothing, occurences + occurences') [Node (Just char, occurences) [], tree]))
 -- There is at least two character frequencies but no tree
 constructTree ((char, occurences) : (char', occurences') : charFrequencies) Nothing = constructTree charFrequencies (Just (Node (Nothing, occurences + occurences') [Node (Just char, occurences) [], Node (Just char', occurences') []]))
 -- There is only one given character frequenct but no tree
-constructTree ((char, occurences) : charFrequencies) Nothing = Node (Just char, occurences) []
+constructTree ((char, occurences) : _) Nothing                                      = Node (Just char, occurences) []
 
+x = constructTree (sortCharFrequencies $ countAll "ABRACADABRA") Nothing
 
--- constructTree :: [(Char, Int)] -> Tree (Maybe Char, Int)
--- constructTree ((char, occurences) : (char', occurences') : charFrequencies) = constructTree ((Nothing, combinedOccurences) : charFrequencies) (Node (Just char, occurences) Empty Empty) (Node (Just char', occurences') Empty Empty)
---   where combinedOccurences = occurences + occurences'
---         node [] = Empty
-
-
--- constructTree :: [(Char, Int)] -> Tree (Maybe Char, Int)
--- constructTree ((char, occurences) : (char', occurences') : charFrequencies) = Node (Nothing, combinedOccurences) (Node (Just char, occurences) Empty Empty) (Node (Just char', occurences') Empty Empty)
---   where combinedOccurences = occurences + occurences'
-
+-- huffmanEncodeChar :: Char -> Tree (Maybe a, b) -> Maybe String
+huffmanEncodeChar char (Node (_, _) (Node (Just leftChar, _) _ : Node (Just rightChar, _) _ : _)) = leftChar
 
 main :: IO ()
 main = do
   string <- getLine
-  print $ countAll string
-  return ()
+  putStrLn $ drawTree $ fmap show $ constructTree (sortCharFrequencies $ countAll string) Nothing
