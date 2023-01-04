@@ -50,7 +50,12 @@ constructTree ((char, occurences) : _) Nothing                                  
 x = constructTree (sortCharFrequencies $ countAll "ABRACADABRA") Nothing
 
 -- huffmanEncodeChar :: Char -> Tree (Maybe a, b) -> Maybe String
-huffmanEncodeChar char (Node (_, _) (Node (Just leftChar, _) _ : Node (Just rightChar, _) _ : _)) = leftChar
+-- huffmanEncodeChar char (Node (_, _) (Node (Just leftChar, _) _ : Node (Just rightChar, _) _ : _)) =
+
+-- huffmanEncodeChar tree char = go tree char
+--   where go (Node (char', _) (leftChild : rightChild : _)) =
+--           case char' of
+
 
 main :: IO ()
 main = do
