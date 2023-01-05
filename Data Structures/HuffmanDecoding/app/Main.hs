@@ -56,6 +56,10 @@ x = constructTree (sortCharFrequencies $ countAll "ABRACADABRA") Nothing
 --   where go (Node (char', _) (leftChild : rightChild : _)) =
 --           case char' of
 
+huffmanEncodeChar (Node (_, _) (Node (Just leftChar, _) _ : Node (Just rightChar, _) _ : _)) char
+  | leftChar == char  = "0"
+  | rightChar == char = "1"
+
 
 main :: IO ()
 main = do
