@@ -71,8 +71,7 @@ charEncodings = convert ""
   where convert :: String -> Tree (Maybe Char, b) -> [(Char, String)]
         convert code (Node (char, _) (leftNode : rightNode : _)) = if isJust char then [(fromJust char, code)] else (convert (code ++ "0") leftNode ) ++ (convert (code ++ "1") rightNode)
         convert code (Node (char, _) (leftNode : _))             = if isJust char then [(fromJust char, code)] else (convert (code ++ "0") leftNode )
-        convert code _                                           = []
-
+        convert code (Node (char, _) [])                         = [(fromJust char, code)]
 
 main :: IO ()
 main = do
