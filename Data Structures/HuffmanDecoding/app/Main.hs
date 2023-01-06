@@ -7,7 +7,8 @@ import Data.Tree ( Tree ( Node
                  , drawTree
                  , flatten
                  , foldTree )
-import Data.Maybe ()
+import Data.Maybe ( isJust
+                  , fromJust )
 
 -- The first character, number of occurences of the first character in a given string, and the leftover characters after all occurences of the first character are removed
 -- Example: countFirstAndRemove "abbac" = ('a', 2, "bbc")
@@ -56,9 +57,21 @@ x = constructTree (sortCharFrequencies $ countAll "ABRACADABRA") Nothing
 --   where go (Node (char', _) (leftChild : rightChild : _)) =
 --           case char' of
 
-huffmanEncodeChar (Node (_, _) (Node (Just leftChar, _) _ : Node (Just rightChar, _) _ : _)) char
-  | leftChar == char  = "0"
-  | rightChar == char = "1"
+-- huffmanEncodeChar (Node (_, _) (Node (Just leftChar, _) _ : Node (Just rightChar, _) _ : _)) char
+--   | leftChar == char  = "0"
+--   | rightChar == char = "1"
+
+-- charEncodings :: Tree (Maybe a, b) -> [(Char, String)]
+-- charEncodings (Node (_, _) (Node (leftChar, _) _ : Node (rightChar, _) _ : _))
+--   | isJust leftChar  = "0"
+--   | isJust rightChar = "1"
+
+-- charEncodings :: Tree (Maybe a, b) -> [(Char, String)]
+charEncodings = convert ""
+  where convert :: String -> Tree (Maybe Char, b) -> [(Char, String)]
+        convert code (Node (char, _) (leftNode : rightNode : _)) = if isJust char then [(fromJust char, code)] else (convert (code ++ "0") leftNode ) ++ (convert (code ++ "1") rightNode)
+        convert code (Node (char, _) (leftNode : _))             = if isJust char then [(fromJust char, code)] else (convert (code ++ "0") leftNode )
+        convert code _                                           = []
 
 
 main :: IO ()
