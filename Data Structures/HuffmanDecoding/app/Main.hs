@@ -7,8 +7,7 @@ import Data.Tree ( Tree ( Node
                  , drawTree
                  , flatten
                  , foldTree )
-import Data.Maybe ( isJust
-                  , fromJust )
+import Data.Maybe ( fromJust )
 
 -- The first character, number of occurences of the first character in a given string, and the leftover characters after all occurences of the first character are removed
 -- Example: countFirstAndRemove "abbac" = ('a', 2, "bbc")
@@ -50,28 +49,20 @@ constructTree ((char, occurences) : _) Nothing                                  
 
 x = constructTree (sortCharFrequencies $ countAll "ABRACADABRA") Nothing
 
--- huffmanEncodeChar :: Char -> Tree (Maybe a, b) -> Maybe String
--- huffmanEncodeChar char (Node (_, _) (Node (Just leftChar, _) _ : Node (Just rightChar, _) _ : _)) =
-
--- huffmanEncodeChar tree char = go tree char
---   where go (Node (char', _) (leftChild : rightChild : _)) =
---           case char' of
-
--- huffmanEncodeChar (Node (_, _) (Node (Just leftChar, _) _ : Node (Just rightChar, _) _ : _)) char
---   | leftChar == char  = "0"
---   | rightChar == char = "1"
-
--- charEncodings :: Tree (Maybe a, b) -> [(Char, String)]
--- charEncodings (Node (_, _) (Node (leftChar, _) _ : Node (rightChar, _) _ : _))
---   | isJust leftChar  = "0"
---   | isJust rightChar = "1"
-
--- charEncodings :: Tree (Maybe a, b) -> [(Char, String)]
-charEncodings = convert ""
+-- A list of characters and their binary encoding from a given tree
+-- Example: charEncodings (Node (Nothing, 1) [Node (Just 'b', 2) [], Node (Just 'c', 3) []]) = [('b',"0"),('c',"1")]
+charEncodings :: Tree (Maybe Char, b) -> [(Char, String)]
+charEncodings tree = convert "" tree
+  -- A help function which makes the inputs of charEncodings nicer
+  -- A list of characters and their binary encodings, built from a given starting encoding and tree
+  -- Example: convert "" (Node (Nothing, 1) [Node (Just 'b', 2) [], Node (Just 'c', 3) []]) = [('b',"0"),('c',"1")]
   where convert :: String -> Tree (Maybe Char, b) -> [(Char, String)]
-        convert code (Node (char, _) (leftNode : rightNode : _)) = if isJust char then [(fromJust char, code)] else (convert (code ++ "0") leftNode ) ++ (convert (code ++ "1") rightNode)
-        convert code (Node (char, _) (leftNode : _))             = if isJust char then [(fromJust char, code)] else (convert (code ++ "0") leftNode )
-        convert code (Node (char, _) [])                         = [(fromJust char, code)]
+        -- The tree has both left and right children nodes
+        convert code (Node (_, _) (leftNode : rightNode : _)) = (convert (code ++ "0") leftNode ) ++ (convert (code ++ "1") rightNode)
+        -- The tree only has a left child node
+        convert code (Node (_, _) (leftNode : _))             = (convert (code ++ "0") leftNode )
+        -- The tree has no children nodes
+        convert code (Node (char, _) [])                      = [(fromJust char, code)]
 
 main :: IO ()
 main = do
