@@ -2,38 +2,27 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 
--- factors n = factors' 1
---   where factors' x
---           | x < n     = x : [factors' + 1]
---           | otherwise = []
-          -- | x == n = []
-          -- | otherwise = x : [factors' + 1]
-
--- factors :: Int -> [Int]
--- factors :: (Ord a, Num a) => a -> [a]
--- factors n 
---   | n <= 1    = [1]
---   | otherwise = factors ((n `div` 2) - 1) ++ [n `div` 2]
-
--- factors :: (Floating a, Integral a) => a -> [a]
--- factors :: (RealFrac b, Floating b, Integral b) => b -> [b]
+-- The factors of a given number
+-- Example: factors 16 = [1,2,4,8,16]
+factors :: Integral a => a -> [a]
 factors n = factors' 1
-        -- Whether a given number is a factor of another number
-  where -- isAFactorOf :: Integral a => a -> a -> Bool
+  where -- Whether a number is a factor of another number
+        -- Example: isAFactorOf 2 10 = True
+        isAFactorOf :: Integral a => a -> a -> Bool
         isAFactorOf a n = n `mod` a == 0
-        -- The squareroot of given n
-        -- sqrtN :: Floating a => a
-        -- sqrtN :: Integral a => a
-        sqrtN = round $ sqrt n
-        -- The factors of given n starting from given a
-        -- factors' :: (RealFrac b, Floating b, Integral b) => b -> [b]
+        -- The rounded squareroot of n
+        rndSqrtN :: Integral a => a
+        rndSqrtN = round $ sqrt $ fromIntegral n
+        -- Helper function for factors, allowing simpler type signature with original n not going out of scope while recursing
+        -- The factors of n starting from a
         factors' a
-          -- Given a is equal to the squareroot of given n (There cannot be any more factors)
-          | a == sqrtN = []
-          | otherwise  = if a `isAFactorOf` n -- Check if given a is a factor of given n
-                           then [a] ++ factors' (a + 1) ++ [n `div` a] -- If so, add given a to the front of factors list, the rest of the factors in between, and a's opposite factor to the end
-                           else factors' (a + 1) -- If not, check the next factor
-                           
+          --  a is equal to the squareroot of n + 1 (There cannot be any more factors)
+          | a == rndSqrtN + 1 = []
+          | otherwise      = if a `isAFactorOf` n -- Check if a is a factor of n
+                               then if a == n `div` a -- Check if a is equal to n divided by a (This is the last possible factor)
+                                 then [a] -- Add a to the factors list
+                                 else [a] ++ factors' (a + 1) ++ [n `div` a] -- Add a to the front of factors list, the rest of the factors in between, and a's opposite factor to the end
+                               else factors' (a + 1) -- Check the next factor                           
 
 main :: IO ()
 main = do
