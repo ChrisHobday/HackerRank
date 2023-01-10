@@ -1,7 +1,6 @@
 module Main (main) where
 
 import Control.Monad ( replicateM )
-import Data.List.Plus
 
 -- The factors of a given number
 -- Example: factors 16 = [1,2,4,8,16]
@@ -27,18 +26,29 @@ factors n = factors' 1
                                   else factors' (a + 1) -- Check the next factor                           
 
 -- Whether a number is prime or not
+-- Example: isPrime 4 = False
 isPrime :: Integral a => a -> Bool
 isPrime k = k > 1 && null [ x | x <- [2 .. round $ sqrt $ fromIntegral k], k `mod` x == 0]
 
-downToZero2 n = downToZero2' n
-  where downToZero2' a
-          | a == 0    = 0
+-- The smallest number of steps to get a number down to zero when you can only either 1) subtract the number by 1 or 2) use the max number of a factor pair
+-- Example: downToZero2 5 = 4
+downToZero2 :: Integral a => a -> Int
+downToZero2 n = length $ steps n
+  where -- The next step down to get a number down to zero
+        -- Example: stepDown 4 = 2
+        stepDown a
+          | a == 0              = 0
           -- a is prime
-          | isPrime a = downToZero2' $ a - 1
+          | isPrime a || a == 1 = a - 1
           -- a has factors we can use to reduce it
-          | otherwise = downToZero2' $ nFactors !! max 0 (length nFactors `div` 2)
-                          where nFactors = factors n
-
+          | otherwise           = aFactors !! (length aFactors `div` 2) -- The smallest max number of all factor pairs of the number
+                                    where aFactors = factors a
+        -- The smallest list of steps to get a number down to zero
+        steps b
+          | stepDown b == 0 = [0]
+          -- There are more steps
+          | otherwise       = nextStep : steps nextStep
+                                where nextStep = stepDown b
 
 main :: IO ()
 main = do
