@@ -1,6 +1,7 @@
 module Main (main) where
 
 import Control.Monad ( replicateM )
+import Data.List.Plus
 
 -- The factors of a given number
 -- Example: factors 16 = [1,2,4,8,16]
@@ -16,13 +17,28 @@ factors n = factors' 1
         -- Helper function for factors, allowing simpler type signature with original n not going out of scope while recursing
         -- The factors of n starting from a
         factors' a
-          --  a is equal to the squareroot of n + 1 (There cannot be any more factors)
+          -- a is equal to the squareroot of n + 1 (There cannot be any more factors)
           | a == rndSqrtN + 1 = []
-          | otherwise      = if a `isAFactorOf` n -- Check if a is a factor of n
-                               then if a == n `div` a -- Check if a is equal to n divided by a (This is the last possible factor)
-                                 then [a] -- Add a to the factors list
-                                 else [a] ++ factors' (a + 1) ++ [n `div` a] -- Add a to the front of factors list, the rest of the factors in between, and a's opposite factor to the end
-                               else factors' (a + 1) -- Check the next factor                           
+          -- There may be more factors
+          | otherwise         = if a `isAFactorOf` n -- Check if a is a factor of n
+                                  then if a == n `div` a -- Check if a is equal to n divided by a (This is the last possible factor)
+                                    then [a] -- Add a to the factors list
+                                    else [a] ++ factors' (a + 1) ++ [n `div` a] -- Add a to the front of factors list, the rest of the factors in between, and a's opposite factor to the end
+                                  else factors' (a + 1) -- Check the next factor                           
+
+-- Whether a number is prime or not
+isPrime :: Integral a => a -> Bool
+isPrime k = k > 1 && null [ x | x <- [2 .. round $ sqrt $ fromIntegral k], k `mod` x == 0]
+
+downToZero2 n = downToZero2' n
+  where downToZero2' a
+          | a == 0    = 0
+          -- a is prime
+          | isPrime a = downToZero2' $ a - 1
+          -- a has factors we can use to reduce it
+          | otherwise = downToZero2' $ nFactors !! max 0 (length nFactors `div` 2)
+                          where nFactors = factors n
+
 
 main :: IO ()
 main = do
