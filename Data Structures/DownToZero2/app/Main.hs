@@ -35,8 +35,8 @@ isPrime a = a > 1 && null [ x | x <- [2 .. round $ sqrt $ fromIntegral a], a `mo
 
 -- The smallest number of steps to get a number down to zero when you can only either 1) subtract the number by 1 or 2) use the max number of a factor pair
 -- Example: downToZero2 5 = 4
-downToZero2 :: Integral a => a -> Int
-downToZero2 n = length $ steps n
+-- downToZero2 :: Integral a => a -> Int
+downToZero2 n = steps n
   where -- The next step down to get a number down to zero
         -- Example: stepDown 4 = 2
         stepDown a
@@ -62,9 +62,36 @@ downToZero2 n = length $ steps n
           | otherwise       = nextStep : steps nextStep
                                 where nextStep = stepDown b
 
+precomputed n = head $ precomputed' []
+  where 
+    precomputed' as
+      | n < lengthAs  = as
+      | null as       = precomputed' $ 0 : as
+      | lengthAs == 1 = precomputed' $ 1 : as
+      | lengthAs == 2 = precomputed' $ 2 : as
+      | lengthAs == 3 = precomputed' $ 3 : as
+      | otherwise     = if isPrime currentNumber
+                          then precomputed' $ minusStep : as
+                          else precomputed' $ minSteps : as
+      where -- The current number we are calculating the number of steps for
+            currentNumber = lengthAs
+            -- The factors of the current number
+            currentNumberFactors = factors currentNumber
+            -- The smallest max number of all factor pairs of the current number
+            smallestMaxFactor = currentNumberFactors !! (length currentNumberFactors `div` 2)
+            -- The length of as
+            lengthAs = length as
+            -- The number of steps to zero with minus 1 option chosen now
+            minusStep = head as + 1
+            -- The number of steps to zero with prime option chosen now
+            primeStep = as !! (lengthAs - smallestMaxFactor - 1) + 1
+            -- The minimum number of steps to zero for the current number
+            minSteps  = min minusStep primeStep
+                         
+
 main :: IO ()
 main = do
   numberOfQueries <- readLn :: IO Int -- Read and bind number of queries to be entered
   queries <- replicateM numberOfQueries $ do -- Replicate the following action for each query
     readLn :: IO Int -- Read query
-  mapM_ (print . downToZero2) queries -- Print the smallest number of steps to zero for each of the queries
+  mapM_ (print . precomputed) queries -- Print the smallest number of steps to zero for each of the queries
