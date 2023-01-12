@@ -2,6 +2,9 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 
+-- Note: The trick to this problem, once you wrap your head around what it's asking you to do in the problem statement, 
+-- is to realise it is heavily related to the factors and prime numbers.
+
 -- The factors of a given number
 -- Example: factors 16 = [1,2,4,8,16]
 factors :: Integral a => a -> [a]
@@ -28,7 +31,7 @@ factors n = factors' 1
 -- Whether a number is prime or not
 -- Example: isPrime 4 = False
 isPrime :: Integral a => a -> Bool
-isPrime k = k > 1 && null [ x | x <- [2 .. round $ sqrt $ fromIntegral k], k `mod` x == 0]
+isPrime a = a > 1 && null [ x | x <- [2 .. round $ sqrt $ fromIntegral a], a `mod` x == 0]
 
 -- The smallest number of steps to get a number down to zero when you can only either 1) subtract the number by 1 or 2) use the max number of a factor pair
 -- Example: downToZero2 5 = 4
@@ -41,8 +44,17 @@ downToZero2 n = length $ steps n
           -- a is prime
           | isPrime a || a == 1 = a - 1
           -- a has factors we can use to reduce it
-          | otherwise           = aFactors !! (length aFactors `div` 2) -- The smallest max number of all factor pairs of the number
-                                    where aFactors = factors a
+          | otherwise           = if length minusStep <= length primeStep
+                                    then a - 1
+                                    else smallestMaxFactor
+                                    where -- The factors of a
+                                          aFactors          = factors a
+                                          -- The smallest max number of all factor pairs of the number
+                                          smallestMaxFactor = aFactors !! (length aFactors `div` 2)
+                                          -- The steps to zero with minus 1 option chosen now
+                                          minusStep         = steps (a - 1)
+                                          -- The steps to zero with prime option chosen now
+                                          primeStep         = steps smallestMaxFactor
         -- The smallest list of steps to get a number down to zero
         steps b
           | stepDown b == 0 = [0]
@@ -55,4 +67,4 @@ main = do
   numberOfQueries <- readLn :: IO Int -- Read and bind number of queries to be entered
   queries <- replicateM numberOfQueries $ do -- Replicate the following action for each query
     readLn :: IO Int -- Read query
-  print queries
+  mapM_ (print . downToZero2) queries -- Print the smallest number of steps to zero for each of the queries
