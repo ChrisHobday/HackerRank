@@ -1,7 +1,8 @@
 module Main (main) where
 
 import qualified Data.Vector as V
-import Control.Monad ( replicateM )
+import Control.Monad ( replicateM
+                     , forM )
 
 -- Note: The trick to this problem, once you wrap your head around what it's asking you to do in the problem statement, 
 -- is to realise it is heavily related to factors and prime numbers.
@@ -35,14 +36,14 @@ factors n = factors' 1
 isPrime :: Integral a => a -> Bool
 isPrime a = a > 1 && null [ x | x <- [2 .. round $ sqrt $ fromIntegral a], a `mod` x == 0]
 
-precomputed n = V.head $ precomputed' V.empty
-  where precomputed' :: V.Vector Int -> V.Vector Int
+precomputed n = V.last $ precomputed' V.empty
+  where -- precomputed' :: V.Vector Int -> V.Vector Int
         precomputed' as
           | n < lengthAs  = as
-          | V.null as     = as <> precomputed' (V.singleton 0)
-          | lengthAs == 1 = as <> precomputed' (V.singleton 1)
-          | lengthAs == 2 = as <> precomputed' (V.singleton 2)
-          | lengthAs == 3 = as <> precomputed' (V.singleton 3)
+          | V.null as     = precomputed' $ as <> V.singleton 0
+          | lengthAs == 1 = precomputed' $ as <> V.singleton 1
+          | lengthAs == 2 = precomputed' $ as <> V.singleton 2
+          | lengthAs == 3 = precomputed' $ as <> V.singleton 3
           | otherwise     = if isPrime currentNumber
                               then precomputed' $ as <> V.singleton minusStep
                               else precomputed' $ as <> V.singleton minSteps
@@ -57,13 +58,18 @@ precomputed n = V.head $ precomputed' V.empty
                 -- The number of steps to zero with minus 1 option chosen now
                 minusStep = V.last as + 1
                 -- The number of steps to zero with prime option chosen now
-                primeStep = as V.! (smallestMaxFactor + 1) + 1
+                primeStep = as V.! smallestMaxFactor + 1
                 -- The minimum number of steps to zero for the current number
-                minSteps  = min minusStep primeStep    
+                minSteps  = min minusStep primeStep
 
 main :: IO ()
 main = do
   numberOfQueries <- readLn :: IO Int -- Read and bind number of queries to be entered
   queries <- replicateM numberOfQueries $ do -- Replicate the following action for each query
     readLn :: IO Int -- Read query
+  
+  -- let x = V.generate 10000 id
+  -- forM x (\i ->
+  --   forM)
+    
   mapM_ (print . precomputed) queries -- Print the smallest number of steps to zero for each of the queries
