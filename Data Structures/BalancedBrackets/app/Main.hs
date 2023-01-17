@@ -26,18 +26,25 @@ continuingBrackets _ _     = False
 
 -- Whether a given bracket string is balanced or not
 -- Example: isBalanced "{{[()]}}" = "YES"
--- isBalanced :: String -> String
+isBalanced :: String -> String
 isBalanced bracketString
   | go [] bracketString = "YES"
   | otherwise           = "NO"
-  where -- Compares latest unmatched bracket with next bracket in bracket string
+  where -- Compares last unmatched bracket with next bracket
         go :: [Char] -> [Char] -> Bool
+        -- There is both a unmatched bracket and a next bracket
         go (x : xs) (y : ys)
+          -- Unmatched bracket and next bracket match
           | matchingBrackets x y   = go xs ys
+          -- Unmatched bracket and next bracket allows for continuing
           | continuingBrackets x y = go (y : x : xs) ys
+          -- Unmatched bracket and next bracket neither match or allow for continuing
           | otherwise              = False
+        -- There is no unmatched bracket, but there is a next bracket
         go [] (y : ys) = go [y] ys
-        go (x : xs) [] = False
+        -- There is a unmatched bracket, but no next bracket
+        go (_ : _) []  = False
+        -- There are no unmatched brackets and no next brackets
         go [] []       = True
 
 
