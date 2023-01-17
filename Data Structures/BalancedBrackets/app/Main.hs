@@ -3,7 +3,20 @@ module Main (main) where
 import Control.Monad ( replicateM
                      , mapM_ )
 
-isBalanced bracketString = bracketString
+-- Whether two given brackets match or not
+-- Example: matchingBrackets '(' ']' = False
+matchingBrackets :: Char -> Char -> Bool
+matchingBrackets '(' ')' = True
+matchingBrackets '{' '}' = True
+matchingBrackets '[' ']' = True
+matchingBrackets _ _     = False
+
+isBalanced :: [a] -> ([a], [a])
+isBalanced bracketString = (firstHalf, secondHalf)
+  where (firstHalf, secondHalf) = splitAt (length bracketString `div` 2) bracketString
+        go bracket bracket'
+          | bracket == bracket' = True
+          | otherwise           = False
 
 main :: IO ()
 main = do
