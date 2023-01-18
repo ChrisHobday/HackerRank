@@ -1,22 +1,38 @@
 module Main (main) where
 
-import Control.Monad ( replicateM
-                     , forM_ )
+import Control.Monad ( replicateM )
 
-evaluateQuery 1 = undefined
-evaluateQuery 2 = undefined
-evaluateQuery 3 = undefined
+-- Note: This FIFO queue is simulated with linked lists
 
-enqueue value = undefined
+-- A queue with a new value added to the back
+enqueue :: a -> [a] -> [a]
+enqueue value queue = queue ++ [value]
 
-dequeue = undefined
+-- A queue with it's front element removed
+dequeue :: [a] -> [a]
+dequeue (value : values) = values
+dequeue []               = []
+
+-- The evaluation of a list of queries and queue
+evaluateQueries :: (Eq a, Num a, Show a) => [[a]] -> [a] -> IO ()
+-- The query type is 1
+evaluateQueries ((1 : queryValue : _) : queries) queue = evaluateQueries queries $ enqueue queryValue queue
+evaluateQueries ((queryType : _) : queries) queue
+  -- The query type is 2
+  | queryType == 2 = evaluateQueries queries $ dequeue queue
+  -- The query type is 3
+  | queryType == 3 = do
+                       print $ head queue
+                       evaluateQueries queries queue
+-- There is not a known query type next in the list of given queries
+evaluateQueries _ _ = return ()
+
+testQueries = [[1,42],[2],[1,14],[3],[1,28],[3],[1,60],[1,78],[2],[2]]
 
 main :: IO ()
 main = do
   numberOfQueries <- (readLn :: IO Int) -- Read and bind number of queries to be entered
   queries <- replicateM numberOfQueries $ do -- Replicate the following action for each query to be entered
-    (queryType : _ : queryValue : _) <- getLine -- Read and bind query type and value
-    return (queryType, queryValue) -- Return query type and value to list of queries
+    (read <$>) . words <$> getLine :: IO [Int] -- Read and bind query type and value
 
-  forM_ queries (\query -> do -- For each query
-    print query)
+  evaluateQueries queries [] -- Evaluate queries with empty starting queue
