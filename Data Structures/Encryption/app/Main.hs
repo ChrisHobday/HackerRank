@@ -1,5 +1,8 @@
 module Main (main) where
 
+encrypted string = undefined
+
 main :: IO ()
 main = do
-  putStrLn "Encryption"
+  string <- getLine -- Read and bind string
+  putStrLn $ encrypted string
