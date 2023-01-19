@@ -9,8 +9,8 @@ import Data.Char ( isSpace )
 -- Example: splitUp 3 "chillout" = ["chi","llo","ut"]
 splitUp :: Int -> [a] -> [[a]]
 splitUp _ [] = []
-splitUp n string  = firstSegment : splitUp n restOfSegments
-  where (firstSegment, restOfSegments) = splitAt n string
+splitUp n string  = firstChunk : splitUp n restOfChunks
+  where (firstChunk, restOfChunks) = splitAt n string
 
 -- The encrypted version of a given string
 -- Example: encrypted "chillout" = "clu hlt io"
