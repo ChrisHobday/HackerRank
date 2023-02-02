@@ -13,12 +13,14 @@ buildSiblingNodes (firstSibling : restOfSiblings)
   | firstSibling == -1 = buildSiblingNodes restOfSiblings
   | otherwise          = Node firstSibling [] : buildSiblingNodes restOfSiblings
 
-addChildren (firstSiblingNodes : restOfSiblingNodes)
+treeLevels (siblingNodes : restOfSiblingNodes) = take (length siblingNodes) restOfSiblingNodes
+
+-- addChildren (firstSibling : restOfSiblings) (childrenSibling : restOfChildrenSiblings) = firstSibling { subForest =  }
 
 
 -- buildTree :: [[Tree Integer]] -> 
-buildTree (firstSiblingNodes : restOfSiblingNodes) = 
-  where addChildren (firstSiblingNodes)
+-- buildTree (firstSiblingNodes : restOfSiblingNodes) = 
+--   where addChildren (firstSiblingNodes)
 
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
