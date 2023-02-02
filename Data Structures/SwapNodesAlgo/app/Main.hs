@@ -13,6 +13,13 @@ buildSiblingNodes (firstSibling : restOfSiblings)
   | firstSibling == -1 = buildSiblingNodes restOfSiblings
   | otherwise          = Node firstSibling [] : buildSiblingNodes restOfSiblings
 
+addChildren (firstSiblingNodes : restOfSiblingNodes)
+
+
+-- buildTree :: [[Tree Integer]] -> 
+buildTree (firstSiblingNodes : restOfSiblingNodes) = 
+  where addChildren (firstSiblingNodes)
+
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
 simplifyNodes (Nothing : restOfNodes)   = simplifyNodes restOfNodes
@@ -52,8 +59,7 @@ swapNodes depth tree = tree
 testNodeList = [[2, 3], [4, -1], [5, -1], [6, -1], [7, 8], [-1, 9], [-1, -1], [10, 11], [-1, -1], [-1, -1], [-1, -1]]
 testNodeList2 = [[2, 3], [-1, -1], [-1, -1]]
 
-siblingNodes = buildSiblingNodes <$> testNodeList
-simpleNodeList = Node 1 [] :  concat siblingNodes
+siblingNodes = [Node 1 []] : (buildSiblingNodes  <$> testNodeList)
 
 main :: IO ()
 main = do
