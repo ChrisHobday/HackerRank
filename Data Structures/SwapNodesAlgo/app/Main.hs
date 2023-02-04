@@ -15,41 +15,9 @@ buildSiblingNodes (firstSibling : restOfSiblings)
 
 treeLevels (siblingNodes : restOfSiblingNodes) = take (length siblingNodes) restOfSiblingNodes
 
--- addChildren (firstSibling : restOfSiblings) (childrenSibling : restOfChildrenSiblings) = firstSibling { subForest =  }
-
-
--- buildTree :: [[Tree Integer]] -> 
--- buildTree (firstSiblingNodes : restOfSiblingNodes) = 
---   where addChildren (firstSiblingNodes)
-
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
 simplifyNodes (Nothing : restOfNodes)   = simplifyNodes restOfNodes
-
--- buildTree nodes = 
---   where siblingNodes   = (buildNode <$>) <$> nodes
---         simpleNodeList = Node 1 [] : (filter (=/ Nothing) $ concat siblingNodes)
-
--- buildSiblings :: (Eq a, Num a) => [a] -> Int -> [[Int]] -> [Tree a]
--- buildSiblings [] _ _                        = []
--- buildSiblings (firstSibling : restSiblings) numberOfCousins siblingPairs
---   | firstSibling == (-1) = buildSiblings restSiblings (numberOfCousins -1) siblingPairs
---   | otherwise            = Node firstSibling [] : buildSiblings restSiblings (numberOfCousins -1) siblingPairs
-
--- buildTree :: [[Int]] -> Int -> Tree Int
--- buildTree nodes@(firstSiblingPair : restOfSiblingPairs) numberOfNodesToBuild = buildSiblings firstSiblingPair
---   where nextNumberOfNodesToBuild = length $ filter (/= -1) $ concat $ take numberOfNodesToBuild nodes
--- buildTree _ _ = undefined
-
--- buildTree ((-1, -1) : restOfSiblingPairs) cousinNodesBefore cousinPairsAfter                      = []
--- buildTree ((-1, secondSibling) : restOfSiblingPairs) cousinNodesBefore cousinPairsAfter           = [Node secondSibling []]
--- buildTree ((firstSibling, -1) : restOfSiblingPairs) cousinNodesBefore cousinPairsAfter            = [Node firstSibling [buildTree restOfSiblings cousinNodesBefore cousinPairsAfter]]
--- buildTree ((firstSibling, secondSibling) : restOfSiblingPairs) cousinNodesBefore cousinPairsAfter = [Node firstSibling [], Node secondSibling []]
--- buildTree _ _ _ = undefined
-
--- buildTree [] _ _ = []
--- buildTree ((firstSibling : secondSibling : _) : restOfSiblingPairs) cousinNodesBefore cousinPairsAfter = [Node firstSibling (buildTree (drop (cousinNodesBefore + cousinPairsAfter) restOfSiblingPairs) 0 0), Node secondSibling (buildTree (drop (cousinNodesBefore + cousinPairsAfter + 1) restOfSiblingPairs) 0 0)]
--- buildTree _ _ _ = undefined
 
 -- A list representing the in order traversal of nodes of a given binary tree
 -- Example: (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
