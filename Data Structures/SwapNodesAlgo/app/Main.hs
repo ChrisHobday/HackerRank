@@ -29,7 +29,7 @@ swapNodes depth tree = tree
 testNodeList = [[2, 3], [4, -1], [5, -1], [6, -1], [7, 8], [-1, 9], [-1, -1], [10, 11], [-1, -1], [-1, -1], [-1, -1]]
 testNodeList2 = [[2, 3], [-1, -1], [-1, -1]]
 
-siblingNodes = [Node 1 []] : (buildSiblingNodes  <$> testNodeList)
+siblingNodes = [Node 1 []] : (buildSiblingNodes  <$> testNodeList2)
 
 main :: IO ()
 main = do
