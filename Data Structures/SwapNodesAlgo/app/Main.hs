@@ -13,7 +13,11 @@ buildSiblingNodes (firstSibling : restOfSiblings)
   | firstSibling == -1 = buildSiblingNodes restOfSiblings
   | otherwise          = Node firstSibling [] : buildSiblingNodes restOfSiblings
 
-treeLevels (siblingNodes : restOfSiblingNodes) = take (length siblingNodes) restOfSiblingNodes
+-- treeLevels (siblingNodes : restOfSiblingNodes) = take (length siblingNodes) restOfSiblingNodes
+-- groupChildrenByDepth :: Int -> [[Tree a]] -> [[[Tree a]]]
+groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupedChildren
+  where groupedChildren             = take numberOfChildrenNodePairsAtDepth childrenNodePairs
+        numberOfChildrenToGroupNext = length groupedChildren
 
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
