@@ -18,7 +18,7 @@ buildSiblingNodes (firstSibling : restOfSiblings)
 groupChildrenByDepth 0 _ = []
 groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupedChildren : groupChildrenByDepth numberOfChildrenToGroupNext restOfChildNodePairs
   where (groupedChildren, restOfChildNodePairs) = splitAt numberOfChildrenNodePairsAtDepth childrenNodePairs
-        numberOfChildrenToGroupNext             = sum (length <$> groupedChildren)
+        numberOfChildrenToGroupNext             = sum $ length <$> groupedChildren
 
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
