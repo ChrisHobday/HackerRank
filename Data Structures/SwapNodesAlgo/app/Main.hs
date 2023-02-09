@@ -15,9 +15,10 @@ buildSiblingNodes (firstSibling : restOfSiblings)
 
 -- treeLevels (siblingNodes : restOfSiblingNodes) = take (length siblingNodes) restOfSiblingNodes
 -- groupChildrenByDepth :: Int -> [[Tree a]] -> [[[Tree a]]]
-groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupedChildren
-  where groupedChildren             = take numberOfChildrenNodePairsAtDepth childrenNodePairs
-        numberOfChildrenToGroupNext = length groupedChildren
+groupChildrenByDepth 0 _ = []
+groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupedChildren : groupChildrenByDepth numberOfChildrenToGroupNext restOfChildNodePairs
+  where (groupedChildren, restOfChildNodePairs) = splitAt numberOfChildrenNodePairsAtDepth childrenNodePairs
+        numberOfChildrenToGroupNext             = sum (length <$> groupedChildren)
 
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
@@ -33,7 +34,7 @@ swapNodes depth tree = tree
 testNodeList = [[2, 3], [4, -1], [5, -1], [6, -1], [7, 8], [-1, 9], [-1, -1], [10, 11], [-1, -1], [-1, -1], [-1, -1]]
 testNodeList2 = [[2, 3], [-1, -1], [-1, -1]]
 
-siblingNodes = [Node 1 []] : (buildSiblingNodes  <$> testNodeList2)
+siblingNodes = [Node 1 []] : (buildSiblingNodes  <$> testNodeList)
 
 main :: IO ()
 main = do
