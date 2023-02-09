@@ -1,7 +1,7 @@
 module Main (main) where
 
 import Control.Monad ( replicateM )
-import Data.Tree ( Tree( Node ) )
+import Data.Tree
 
 buildNode value
   | value == -1 = Nothing
@@ -20,6 +20,13 @@ groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupe
   where (groupedChildren, restOfChildNodePairs) = splitAt numberOfChildrenNodePairsAtDepth childrenNodePairs
         numberOfChildrenToGroupNext             = sum $ length <$> groupedChildren
 
+buildTree (deepestChildPairs : nextDeepestChildPairs : restOfDepths) = insertChildPairs deepestChildPairs nextDeepestChildPairs
+
+insertChildPairs [] _ = []
+insertChildPairs _ [] = []
+insertChildPairs (firstChildPair : restOfChildPairs) ([] : restOfParentPairs)                            = insertChildPairs (firstChildPair : restOfChildPairs) restOfParentPairs
+insertChildPairs (firstChildPair : restOfChildPairs) ((firstParent : restOfParents) : restOfParentPairs) = firstParent { subForest = firstChildPair } : insertChildPairs restOfChildPairs (restOfParents : restOfParentPairs)
+
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
 simplifyNodes (Nothing : restOfNodes)   = simplifyNodes restOfNodes
@@ -35,6 +42,9 @@ testNodeList = [[2, 3], [4, -1], [5, -1], [6, -1], [7, 8], [-1, 9], [-1, -1], [1
 testNodeList2 = [[2, 3], [-1, -1], [-1, -1]]
 
 siblingNodes = [Node 1 []] : (buildSiblingNodes  <$> testNodeList)
+siblingNodes2 = [Node 1 []] : (buildSiblingNodes  <$> testNodeList2)
+
+[firstTest, secondTest] = take 2 $ reverse $ groupChildrenByDepth 1 siblingNodes
 
 main :: IO ()
 main = do
