@@ -20,12 +20,19 @@ groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupe
   where (groupedChildren, restOfChildNodePairs) = splitAt numberOfChildrenNodePairsAtDepth childrenNodePairs
         numberOfChildrenToGroupNext             = sum $ length <$> groupedChildren
 
-buildTree (deepestChildPairs : nextDeepestChildPairs : restOfDepths) = insertChildPairs deepestChildPairs nextDeepestChildPairs
+-- buildTree (deepestChildPairs : nextDeepestChildPairs : restOfDepths) = insertChildPairs deepestChildPairs nextDeepestChildPairs
 
-insertChildPairs [] _ = []
-insertChildPairs _ [] = []
-insertChildPairs (firstChildPair : restOfChildPairs) ([] : restOfParentPairs)                            = insertChildPairs (firstChildPair : restOfChildPairs) restOfParentPairs
-insertChildPairs (firstChildPair : restOfChildPairs) ((firstParent : restOfParents) : restOfParentPairs) = firstParent { subForest = firstChildPair } : insertChildPairs restOfChildPairs (restOfParents : restOfParentPairs)
+-- insertChildPairs [] _ = []
+-- insertChildPairs _ [] = []
+-- insertChildPairs (firstChildPair : restOfChildPairs) ([] : restOfParentPairs)                            = insertChildPairs (firstChildPair : restOfChildPairs) restOfParentPairs
+-- insertChildPairs (firstChildPair : restOfChildPairs) ((firstParent : restOfParents) : restOfParentPairs) = firstParent { subForest = firstChildPair } : insertChildPairs restOfChildPairs (restOfParents : restOfParentPairs)
+
+-- insertChildPairs [] _ = []
+-- insertChildPairs _ [] = []
+-- insertChildPairs (firstChildPair : restOfChildPairs) ([] : restOfParentPairs)                            = insertChildPairs (firstChildPair : restOfChildPairs) restOfParentPairs
+-- insertChildPairs (firstChildPair : restOfChildPairs) ((firstParent : restOfParents) : restOfParentPairs) = firstParent { subForest = firstChildPair } : insertChildPairs restOfChildPairs (restOfParents : restOfParentPairs)
+
+insertChildPairs (firstChildPair : restOfChildPairs)
 
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
