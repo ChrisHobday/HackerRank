@@ -20,7 +20,7 @@ groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupe
   where (groupedChildren, restOfChildNodePairs) = splitAt numberOfChildrenNodePairsAtDepth childrenNodePairs
         numberOfChildrenToGroupNext             = sum $ length <$> groupedChildren
 
--- buildTree (deepestChildPairs : nextDeepestChildPairs : restOfDepths) = insertChildPairs deepestChildPairs nextDeepestChildPairs
+buildTree siblingNodeList = head $ concat $ foldl insertChildPairs [[]] $ reverse $ groupChildrenByDepth 1 $ [Node 1 []] : (buildSiblingNodes <$> siblingNodeList)
 
 insertChildPairs [] _ = []
 insertChildPairs _ [] = []
