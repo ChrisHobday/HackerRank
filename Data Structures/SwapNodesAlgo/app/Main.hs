@@ -22,17 +22,12 @@ groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupe
 
 -- buildTree (deepestChildPairs : nextDeepestChildPairs : restOfDepths) = insertChildPairs deepestChildPairs nextDeepestChildPairs
 
--- insertChildPairs [] _ = []
--- insertChildPairs _ [] = []
--- insertChildPairs (firstChildPair : restOfChildPairs) ([] : restOfParentPairs)                            = insertChildPairs (firstChildPair : restOfChildPairs) restOfParentPairs
--- insertChildPairs (firstChildPair : restOfChildPairs) ((firstParent : restOfParents) : restOfParentPairs) = firstParent { subForest = firstChildPair } : insertChildPairs restOfChildPairs (restOfParents : restOfParentPairs)
-
--- insertChildPairs [] _ = []
--- insertChildPairs _ [] = []
--- insertChildPairs (firstChildPair : restOfChildPairs) ([] : restOfParentPairs)                            = insertChildPairs (firstChildPair : restOfChildPairs) restOfParentPairs
--- insertChildPairs (firstChildPair : restOfChildPairs) ((firstParent : restOfParents) : restOfParentPairs) = firstParent { subForest = firstChildPair } : insertChildPairs restOfChildPairs (restOfParents : restOfParentPairs)
-
-insertChildPairs (firstChildPair : restOfChildPairs)
+insertChildPairs [] _ = []
+insertChildPairs _ [] = []
+insertChildPairs childPairs (firstParentPair : restOfParentPairs)
+  | null firstParentPair = [] : insertChildPairs childPairs restOfParentPairs
+  | otherwise            = zipWith (\a b -> b { subForest = a }) childPairsToUse firstParentPair : insertChildPairs restOfChildPairs restOfParentPairs
+  where (childPairsToUse, restOfChildPairs) = splitAt (length firstParentPair) childPairs
 
 simplifyNodes [] = []
 simplifyNodes (Just node : restOfNodes) = node : simplifyNodes restOfNodes
@@ -51,7 +46,7 @@ testNodeList2 = [[2, 3], [-1, -1], [-1, -1]]
 siblingNodes = [Node 1 []] : (buildSiblingNodes  <$> testNodeList)
 siblingNodes2 = [Node 1 []] : (buildSiblingNodes  <$> testNodeList2)
 
-[firstTest, secondTest] = take 2 $ reverse $ groupChildrenByDepth 1 siblingNodes
+[firstTest, secondTest, thirdTest] = take 3 $ reverse $ groupChildrenByDepth 1 siblingNodes
 
 main :: IO ()
 main = do
