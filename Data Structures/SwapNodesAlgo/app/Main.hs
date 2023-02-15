@@ -38,7 +38,9 @@ buildTree siblingNodeList = head $ concat $ foldl insertChildPairs [[]] $ revers
 
 -- A list representing the in order traversal of nodes of a given binary tree
 -- Example: (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
-inOrderTraversal tree = []
+inOrderTraversal (Node id (firstChild : secondChild : _)) = inOrderTraversal firstChild <> show id <> inOrderTraversal secondChild
+inOrderTraversal (Node id (firstChild : _)) = inOrderTraversal firstChild <> show id
+inOrderTraversal (Node id []) = show id
 
 -- Swap the nodes of a given tree at a given depth
 swapNodes depth tree = tree
