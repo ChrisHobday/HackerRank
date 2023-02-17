@@ -22,13 +22,13 @@ groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupe
 -- Insert child pairs into their parent nodes
 -- Example: insertChildPairs [[Node {rootLabel = 2, subForest = []},Node {rootLabel = 3, subForest = []}]] [[Node {rootLabel = 1, subForest = []}]] =
 --   [[Node {rootLabel = 1, subForest = [Node {rootLabel = 2, subForest = []},Node {rootLabel = 3, subForest = []}]}]]
-insertChildPairs :: [[Tree a]] -> [[Tree a]] -> [[Tree a]]
+-- insertChildPairs :: [[Tree a]] -> [[Tree a]] -> [[Tree a]]
 insertChildPairs [] _ = []
 insertChildPairs _ [] = []
 insertChildPairs childPairs (firstParentPair : restOfParentPairs)
   | null firstParentPair = [] : insertChildPairs childPairs restOfParentPairs
-  | otherwise            = zipWith (\a b -> b { subForest = a }) childPairsToUse firstParentPair : insertChildPairs restOfChildPairs restOfParentPairs
-  where (childPairsToUse, restOfChildPairs) = splitAt (length firstParentPair) childPairs
+  | otherwise            = zipWith (\a b -> if rootLabel b /= -1 then b { subForest = a } else b) childPairsToUse firstParentPair : insertChildPairs restOfChildPairs restOfParentPairs
+  where (childPairsToUse, restOfChildPairs) = splitAt (length $ filter ((/= -1) . rootLabel) firstParentPair) childPairs
 
 -- Build a tree from a given list of numberPairs
 -- Example: buildTree [[2, 3],[-1, -1],[-1, -1]] = Node {rootLabel = 1, subForest = [Node {rootLabel = 2, subForest = []},Node {rootLabel = 3, subForest = []}]}
@@ -52,7 +52,9 @@ main = do
 
   let binaryTree = buildTree nodes
 
-  print $ inOrderTraversal binaryTree
+  putStrLn $ drawTree $ show <$> binaryTree
+
+  -- print $ inOrderTraversal binaryTree
 
   -- numberOfQueries <- readLn :: IO Int -- Read and bind number of queries to be entered
   -- queries <- replicateM numberOfQueries $ do -- For each query to be entered...
