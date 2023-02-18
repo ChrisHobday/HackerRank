@@ -2,18 +2,29 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 import Data.Tree
+import Debug.Trace
 
 -- buildTree :: [Tree Int] -> [Tree Int]
-buildTree :: (Eq a, Num a) => [Tree a] -> [Tree a]
-buildTree (firstSibling : secondSibling : potentialParent : restOfPotentialParents)
-  -- Cannot be parent because either it's not a proper node or it already has children
-  | rootLabel potentialParent == -1 || not (null (subForest potentialParent)) = buildTree $ potentialParent : buildTree (firstSibling : secondSibling : restOfPotentialParents)
-  -- Parent found
-  | otherwise                                                                 = potentialParent { subForest = [firstSibling, secondSibling] } : restOfPotentialParents
-buildTree finalTree = finalTree
+-- buildTree :: (Eq a, Num a) => [Tree a] -> [Tree a]
+-- buildTree (firstSibling : secondSibling : potentialParent : restOfPotentialParents)
+--   -- Cannot be parent because either it's not a proper node or it already has children
+--   | rootLabel potentialParent == -1 || not (null (subForest potentialParent)) = buildTree $ potentialParent : buildTree (firstSibling : secondSibling : restOfPotentialParents)
+--   -- Parent found
+--   | otherwise                                                                 = potentialParent { subForest = [firstSibling, secondSibling] } : restOfPotentialParents
+-- buildTree finalTree = finalTree
 
-siblingPairs = [[2, 3], [-1, 4], [-1, 5], [-1, -1], [-1, -1]]
-reversedNodeList = (\a -> Node a []) <$> concat (reverse $ [1] : siblingPairs)
+insertSiblings (firstSibling : secondSibling : potentialParent : restOfPotentialParents)
+  | rootLabel potentialParent == -1 || not (null (subForest potentialParent)) = potentialParent : insertSiblings (firstSibling : secondSibling : restOfPotentialParents)
+  | otherwise                                                                 = potentialParent { subForest = [firstSibling, secondSibling] } : restOfPotentialParents
+insertSiblings nodes' = nodes'
+
+buildTree nodes@(_ : _ : _ : _) = buildTree $ insertSiblings nodes
+buildTree nodes = head nodes
+
+-- siblingPairs = [[2, 3], [-1, -1], [-1, -1]]
+-- siblingPairs2 = [[2, 3], [-1, 4], [-1, 5], [-1, -1], [-1, -1]]
+-- reversedNodeList = (\a -> Node a []) <$> reverse (concat $ [1] : siblingPairs)
+-- reversedNodeList2 = (\a -> Node a []) <$> reverse (concat $ [1] : siblingPairs2)
 
 -- -- Build sibling nodes from a list of number pairs
 -- -- Example: buildSiblingNodes [2, -1] = [Node {rootLabel = 2, subForest = []}]
@@ -58,13 +69,14 @@ reversedNodeList = (\a -> Node a []) <$> concat (reverse $ [1] : siblingPairs)
 
 main :: IO ()
 main = do
-  -- numberOfNodes <- readLn :: IO Int -- Read and bind number of nodes to be entered
-  -- nodes <- replicateM numberOfNodes $ do -- For each node to be entered...
-  --   (read <$>) . words <$> getLine :: IO [Int] -- Read nodes
+  numberOfSiblingPairs <- readLn :: IO Int -- Read and bind number of sibling pairs to be entered
+  siblingPairs <- replicateM numberOfSiblingPairs $ do -- For each sibling pair to be entered...
+    (read <$>) . words <$> getLine :: IO [Int] -- Read nodes
 
-  -- let binaryTree = buildTree nodes
+  let nodes = (\a -> Node a []) <$> reverse (concat $ [1] : siblingPairs)
+      binaryTree = buildTree nodes
 
-  -- putStrLn $ drawTree $ show <$> binaryTree
+  putStrLn $ drawTree $ show <$> binaryTree
 
   -- print $ inOrderTraversal binaryTree
 
