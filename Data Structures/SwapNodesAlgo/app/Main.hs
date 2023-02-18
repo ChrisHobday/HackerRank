@@ -4,59 +4,30 @@ import Control.Monad ( replicateM )
 import Data.Tree
 import Debug.Trace
 
--- buildTree :: [Tree Int] -> [Tree Int]
--- buildTree :: (Eq a, Num a) => [Tree a] -> [Tree a]
--- buildTree (firstSibling : secondSibling : potentialParent : restOfPotentialParents)
---   -- Cannot be parent because either it's not a proper node or it already has children
---   | rootLabel potentialParent == -1 || not (null (subForest potentialParent)) = buildTree $ potentialParent : buildTree (firstSibling : secondSibling : restOfPotentialParents)
---   -- Parent found
---   | otherwise                                                                 = potentialParent { subForest = [firstSibling, secondSibling] } : restOfPotentialParents
--- buildTree finalTree = finalTree
-
-insertSiblings (firstSibling : secondSibling : potentialParent : restOfPotentialParents)
-  | rootLabel potentialParent == -1 || not (null (subForest potentialParent)) = potentialParent : insertSiblings (firstSibling : secondSibling : restOfPotentialParents)
-  | otherwise                                                                 = potentialParent { subForest = [firstSibling, secondSibling] } : restOfPotentialParents
-insertSiblings nodes' = nodes'
-
+-- A tree build from a given list of nodes (lowest depth first)
+-- Example: buildTree [Node {rootLabel = -1, subForest = []},Node {rootLabel = -1, subForest = []},Node {rootLabel = -1, subForest = []},Node {rootLabel = -1, subForest = []},Node {rootLabel = 3, subForest = []},Node {rootLabel = 2, subForest = []},Node {rootLabel = 1, subForest = []}] =
+-- Node {rootLabel = 1, subForest = [Node {rootLabel = 3, subForest = [Node {rootLabel = -1, subForest = []},Node {rootLabel = -1, subForest = []}]},Node {rootLabel = 2, subForest = [Node {rootLabel = -1, subForest = []},Node {rootLabel = -1, subForest = []}]}]}
+buildTree :: (Eq a, Num a) => [Tree a] -> Tree a
+-- There are 3 or more nodes
 buildTree nodes@(_ : _ : _ : _) = buildTree $ insertSiblings nodes
-buildTree nodes = head nodes
+  where
+    -- Inserts the first 2 nodes of a given list into the first node after that is not -1
+    insertSiblings :: (Eq a, Num a) => [Tree a] -> [Tree a]
+    -- There are 3 or more nodes
+    insertSiblings (firstSibling : secondSibling : potentialParent : restOfPotentialParents)
+    -- Cannot be parent because either it's not a proper node or it already has children
+      | rootLabel potentialParent == -1 || not (null (subForest potentialParent)) = potentialParent : insertSiblings (firstSibling : secondSibling : restOfPotentialParents)
+      -- Parent found
+      | otherwise                                                                 = potentialParent { subForest = [firstSibling, secondSibling] } : restOfPotentialParents
+    -- There are not 3 or more nodes
+    insertSiblings nodes' = nodes'
+-- There are not 3 or more nodes
+buildTree nodes = head nodes -- return the built tree from inside the list
 
--- siblingPairs = [[2, 3], [-1, -1], [-1, -1]]
--- siblingPairs2 = [[2, 3], [-1, 4], [-1, 5], [-1, -1], [-1, -1]]
--- reversedNodeList = (\a -> Node a []) <$> reverse (concat $ [1] : siblingPairs)
--- reversedNodeList2 = (\a -> Node a []) <$> reverse (concat $ [1] : siblingPairs2)
-
--- -- Build sibling nodes from a list of number pairs
--- -- Example: buildSiblingNodes [2, -1] = [Node {rootLabel = 2, subForest = []}]
--- buildSiblingNodes :: (Eq a, Num a) => [a] -> [Tree a]
--- buildSiblingNodes [] = []
--- buildSiblingNodes (firstSibling : restOfSiblings)
---   -- | firstSibling == -1 = buildSiblingNodes restOfSiblings
---   | otherwise          = Node firstSibling [] : buildSiblingNodes restOfSiblings
-
--- -- Group a list of of child nodes by their depth in the tree
--- -- Example: groupChildrenByDepth 1 [[Node {rootLabel = 1, subForest = []}],[Node {rootLabel = 2, subForest = []},Node {rootLabel = 3, subForest = []}]] = 
--- --   [[[Node {rootLabel = 1, subForest = []}]],[[Node {rootLabel = 2, subForest = []},Node {rootLabel = 3, subForest = []}]],[]]
--- groupChildrenByDepth 0 _ = []
--- groupChildrenByDepth numberOfChildrenNodePairsAtDepth childrenNodePairs = groupedChildren : groupChildrenByDepth numberOfChildrenToGroupNext restOfChildNodePairs
---   where (groupedChildren, restOfChildNodePairs) = splitAt numberOfChildrenNodePairsAtDepth childrenNodePairs
---         numberOfChildrenToGroupNext             = sum $ length <$> (filter ((/= -1) . rootLabel) <$> groupedChildren)
-
--- -- Insert child pairs into their parent nodes
--- -- Example: insertChildPairs [[Node {rootLabel = 2, subForest = []},Node {rootLabel = 3, subForest = []}]] [[Node {rootLabel = 1, subForest = []}]] =
--- --   [[Node {rootLabel = 1, subForest = [Node {rootLabel = 2, subForest = []},Node {rootLabel = 3, subForest = []}]}]]
--- -- insertChildPairs :: [[Tree a]] -> [[Tree a]] -> [[Tree a]]
--- insertChildPairs [] _ = []
--- insertChildPairs _ [] = []
--- insertChildPairs childPairs (firstParentPair : restOfParentPairs)
---   | null firstParentPair = [] : insertChildPairs childPairs restOfParentPairs
---   | otherwise            = zipWith (\a b -> if rootLabel b /= -1 then b { subForest = a } else b) childPairsToUse firstParentPair : insertChildPairs restOfChildPairs restOfParentPairs
---   where (childPairsToUse, restOfChildPairs) = splitAt (length $ filter ((/= -1) . rootLabel) firstParentPair) childPairs
-
--- -- Build a tree from a given list of numberPairs
--- -- Example: buildTree [[2, 3],[-1, -1],[-1, -1]] = Node {rootLabel = 1, subForest = [Node {rootLabel = 2, subForest = []},Node {rootLabel = 3, subForest = []}]}
--- buildTree :: (Num a, Eq a) => [[a]] -> Tree a
--- buildTree siblingNodeList = head $ concat $ foldl1 insertChildPairs $ reverse $ groupChildrenByDepth 1 $ [Node 1 []] : (buildSiblingNodes <$> siblingNodeList)
+testSiblingPairs = [[2, 3], [-1, -1], [-1, -1]]
+testSiblingPairs2 = [[2, 3], [-1, 4], [-1, 5], [-1, -1], [-1, -1]]
+testReversedNodeList = (\a -> Node a []) <$> reverse (concat $ [1] : testSiblingPairs)
+testReversedNodeList2 = (\a -> Node a []) <$> reverse (concat $ [1] : testSiblingPairs2)
 
 -- -- A list representing the in order traversal of nodes of a given binary tree
 -- -- Example: (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
