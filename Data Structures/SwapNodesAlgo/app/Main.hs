@@ -51,8 +51,18 @@ inOrderTraversal (Node id [])
 -- Node {rootLabel = 1, subForest = [Node {rootLabel = 3, subForest = []},Node {rootLabel = 2, subForest = []}]}
 swapChildren node = node { subForest = (reverse . subForest) node }
 
--- -- Swap the nodes of a given tree at a given depth
--- swapNodes depth tree = tree
+-- Swap the child nodes of a given tree at all depths of a given multiple
+-- Example: swap 1 (Node 1 [Node 2 [], Node 3[]]) = 
+-- Node {rootLabel 1, subForest = [Node {rootLabel = 2, subForest = []}, Node {rootLabel = 3, subForest = []}]}
+swapNodes depthMultiple tree = swapNodes' depthMultiple tree
+  where
+    swapNodes' depthCountdown node
+      -- Node does not continue (we're at end of a branch)
+      | rootLabel node == -1 = node
+      -- The nodes at this depth should be swapped
+      | depthCountdown == 1 = node { subForest = reverse ((swapNodes' depth) <$> (subForest node)) } -- Swap the nodes of the current node's children if they need to be and then reverse the current node's children
+      -- The nodes at this depth should not be swapped
+      | otherwise = node { subForest = (swapNodes' (depthCountdown - 1) <$> (subForest node)) }
 
 main :: IO ()
 main = do
