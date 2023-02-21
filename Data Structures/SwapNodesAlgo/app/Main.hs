@@ -38,13 +38,18 @@ testReversedNodeList = reversedNodeList testSiblingPairs
 testReversedNodeList2 = reversedNodeList testSiblingPairs2
 testReversedNodeList3 = reversedNodeList testSiblingPairs3
 
--- -- A list representing the in order traversal of nodes of a given binary tree (left most to right most)
--- -- Example: (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
+-- A list representing the in order traversal of nodes of a given binary tree (left most to right most)
+-- Example: inOrderTraversal (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
 inOrderTraversal (Node id (firstChild : secondChild : _)) = inOrderTraversal firstChild <> [id] <> inOrderTraversal secondChild
 inOrderTraversal (Node id (firstChild : _)) = inOrderTraversal firstChild <> [id]
 inOrderTraversal (Node id [])
   | id == -1  = []
   | otherwise = [id]
+
+-- Swaps the children of a given node
+-- Example: swapChildren (Node 1 [Node 2 [], Node 3 []]) =
+-- Node {rootLabel = 1, subForest = [Node {rootLabel = 3, subForest = []},Node {rootLabel = 2, subForest = []}]}
+swapChildren node = node { subForest = (reverse . subForest) node }
 
 -- -- Swap the nodes of a given tree at a given depth
 -- swapNodes depth tree = tree
@@ -53,7 +58,13 @@ main :: IO ()
 main = do
   numberOfSiblingPairs <- readLn :: IO Int -- Read and bind number of sibling pairs to be entered
   siblingPairs <- replicateM numberOfSiblingPairs $ do -- For each sibling pair to be entered...
-    (read <$>) . words <$> getLine :: IO [Int] -- Read nodes
+    (read <$>) . words <$> getLine :: IO [Int] -- Read sibling pair
+
+  numberOfSwaps <- readLn :: IO Int -- Read and bind number of swaps to be entered
+  swaps <- replicateM numberOfSwaps $ do -- For each swap to be entered...
+    readLn :: IO Int -- Read swap
+  
+  print swaps
 
   let nodes = reversedNodeList siblingPairs
       binaryTree = buildTree nodes
