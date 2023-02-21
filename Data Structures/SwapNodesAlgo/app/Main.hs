@@ -37,32 +37,33 @@ testSiblingPairs3 = [[2, 3], [4, -1], [5, -1], [6, -1], [7, 8], [-1, 9], [-1, -1
 testReversedNodeList = reversedNodeList testSiblingPairs
 testReversedNodeList2 = reversedNodeList testSiblingPairs2
 testReversedNodeList3 = reversedNodeList testSiblingPairs3
+testTree = buildTree testReversedNodeList
+testTree2 = buildTree testReversedNodeList2
+testTree3 = buildTree testReversedNodeList3
 
 -- A list representing the in order traversal of nodes of a given binary tree (left most to right most)
 -- Example: inOrderTraversal (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
+inOrderTraversal :: (Eq a, Num a) => Tree a -> [a]
 inOrderTraversal (Node id (firstChild : secondChild : _)) = inOrderTraversal firstChild <> [id] <> inOrderTraversal secondChild
-inOrderTraversal (Node id (firstChild : _)) = inOrderTraversal firstChild <> [id]
+inOrderTraversal (Node id (firstChild : _))               = inOrderTraversal firstChild <> [id]
 inOrderTraversal (Node id [])
   | id == -1  = []
   | otherwise = [id]
 
--- Swaps the children of a given node
--- Example: swapChildren (Node 1 [Node 2 [], Node 3 []]) =
--- Node {rootLabel = 1, subForest = [Node {rootLabel = 3, subForest = []},Node {rootLabel = 2, subForest = []}]}
-swapChildren node = node { subForest = (reverse . subForest) node }
-
 -- Swap the child nodes of a given tree at all depths of a given multiple
 -- Example: swap 1 (Node 1 [Node 2 [], Node 3[]]) = 
 -- Node {rootLabel 1, subForest = [Node {rootLabel = 2, subForest = []}, Node {rootLabel = 3, subForest = []}]}
+swapNodes :: (Eq a, Num a, Eq p, Num p) => p -> Tree a -> Tree a
 swapNodes depthMultiple tree = swapNodes' depthMultiple tree
   where
-    swapNodes' depthCountdown node
+    -- Helper function for counting down the depth as the tree is traversed and tracking the current node
+    swapNodes' depthCountdown currentNode
       -- Node does not continue (we're at end of a branch)
-      | rootLabel node == -1 = node
+      | rootLabel currentNode == -1 = currentNode
       -- The nodes at this depth should be swapped
-      | depthCountdown == 1 = node { subForest = reverse ((swapNodes' depth) <$> (subForest node)) } -- Swap the nodes of the current node's children if they need to be and then reverse the current node's children
+      | depthCountdown == 1         = currentNode { subForest = reverse (swapNodes' depthMultiple <$> subForest currentNode) } -- Swap the nodes of the current node's children if they need to be and then reverse the current node's children
       -- The nodes at this depth should not be swapped
-      | otherwise = node { subForest = (swapNodes' (depthCountdown - 1) <$> (subForest node)) }
+      | otherwise                   = currentNode { subForest = swapNodes' (depthCountdown - 1) <$> subForest currentNode } -- Swap the nodes of the current node's children if they need to be
 
 main :: IO ()
 main = do
