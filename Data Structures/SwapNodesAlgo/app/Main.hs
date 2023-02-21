@@ -38,21 +38,13 @@ testReversedNodeList = reversedNodeList testSiblingPairs
 testReversedNodeList2 = reversedNodeList testSiblingPairs2
 testReversedNodeList3 = reversedNodeList testSiblingPairs3
 
-leftToRightTraversal (Node id (firstChild : secondChild : _)) = leftToRightTraversal firstChild <> [id] <> leftToRightTraversal secondChild
-leftToRightTraversal (Node id (firstChild : _)) = leftToRightTraversal firstChild <> [id]
-leftToRightTraversal (Node id [])
+-- -- A list representing the in order traversal of nodes of a given binary tree (left most to right most)
+-- -- Example: (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
+inOrderTraversal (Node id (firstChild : secondChild : _)) = inOrderTraversal firstChild <> [id] <> inOrderTraversal secondChild
+inOrderTraversal (Node id (firstChild : _)) = inOrderTraversal firstChild <> [id]
+inOrderTraversal (Node id [])
   | id == -1  = []
   | otherwise = [id]
-
--- leftToRightTraversal (Node id (firstChild : secondChild : _)) = leftToRightTraversal firstChild <> id <> leftToRightTraversal secondChild
--- leftToRightTraversal (Node id (firstChild : _)) = leftToRightTraversal firstChild
--- leftToRightTraversal (Node id []) = id
-
--- -- A list representing the in order traversal of nodes of a given binary tree
--- -- Example: (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
-inOrderTraversal (Node id (firstChild : secondChild : _)) = [rootLabel firstChild] <> leftToRightTraversal firstChild <> [id] <> [rootLabel secondChild] <> leftToRightTraversal secondChild
-inOrderTraversal (Node id (firstChild : _)) = [rootLabel firstChild] <> leftToRightTraversal firstChild <> [id]
-inOrderTraversal (Node id []) = [id]
 
 -- -- Swap the nodes of a given tree at a given depth
 -- swapNodes depth tree = tree
@@ -63,10 +55,11 @@ main = do
   siblingPairs <- replicateM numberOfSiblingPairs $ do -- For each sibling pair to be entered...
     (read <$>) . words <$> getLine :: IO [Int] -- Read nodes
 
-  let nodes = (\a -> Node a []) <$> reverse (concat $ [1] : siblingPairs)
+  let nodes = reversedNodeList siblingPairs
       binaryTree = buildTree nodes
 
   putStrLn $ drawTree $ show <$> binaryTree
+  print $ inOrderTraversal binaryTree
 
   -- print $ inOrderTraversal binaryTree
 
