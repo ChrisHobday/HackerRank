@@ -1,9 +1,8 @@
 module Main (main) where
 
 import Control.Monad ( replicateM )
-import Data.Tree
+import Data.Tree ( Tree(..) )
 import Data.List ( intersperse )
-import Debug.Trace
 
 -- A list of tree nodes in reverse order from a given list of sibling pairs without a root node
 -- Example: reversedNodeList [[2, 3], [-1, -1], [-1, -1]] =
@@ -31,16 +30,6 @@ buildTree nodes@(_ : _ : _ : _) = buildTree $ insertSiblings nodes
 -- There are not 3 or more nodes
 buildTree nodes = head nodes -- return the built tree from inside the list
 
-testSiblingPairs = [[2, 3], [-1, -1], [-1, -1]]
-testSiblingPairs2 = [[2, 3], [-1, 4], [-1, 5], [-1, -1], [-1, -1]]
-testSiblingPairs3 = [[2, 3], [4, -1], [5, -1], [6, -1], [7, 8], [-1, 9], [-1, -1], [10, 11], [-1, -1], [-1, -1], [-1, -1]]
-testReversedNodeList = reversedNodeList testSiblingPairs
-testReversedNodeList2 = reversedNodeList testSiblingPairs2
-testReversedNodeList3 = reversedNodeList testSiblingPairs3
-testTree = buildTree testReversedNodeList
-testTree2 = buildTree testReversedNodeList2
-testTree3 = buildTree testReversedNodeList3
-
 -- A list representing the in order traversal of nodes of a given binary tree (left most to right most)
 -- Example: inOrderTraversal (Node 1 [Node 2 [], Node 3 []]) = [2, 1, 3]
 inOrderTraversal :: (Eq a, Num a) => Tree a -> [a]
@@ -65,6 +54,14 @@ swapNodes depthMultiple tree = swapNodes' depthMultiple tree
       -- The nodes at this depth should not be swapped
       | otherwise                   = currentNode { subForest = swapNodes' (depthCountdown - 1) <$> subForest currentNode } -- Swap the nodes of the current node's children if they need to be
 
+-- Preform a given list of swap nodes functions on a given tree printing the in order traversal of the new tree and passing the new tree along to be swapped with the next swap nodes function
+swapNodesAndPrintInOrderTraversal :: (Show a, Eq a, Num a) => [Tree a -> Tree a] -> Tree a -> IO ()
+swapNodesAndPrintInOrderTraversal [] _ = return ()
+swapNodesAndPrintInOrderTraversal (swapNodesFunction : restOfSwapNodesFunctions) tree = do
+  let newTree = swapNodesFunction tree -- New tree created by applying next swap nodes function
+  putStrLn $ unwords $ show <$> inOrderTraversal newTree -- Print in order traversal of new tree
+  swapNodesAndPrintInOrderTraversal restOfSwapNodesFunctions newTree -- Preform next swap and print with new tree
+
 main :: IO ()
 main = do
   numberOfSiblingPairs <- readLn :: IO Int -- Read and bind number of sibling pairs to be entered
@@ -72,23 +69,10 @@ main = do
     (read <$>) . words <$> getLine :: IO [Int] -- Read sibling pair
 
   numberOfSwaps <- readLn :: IO Int -- Read and bind number of swaps to be entered
-  swaps <- replicateM numberOfSwaps $ do -- For each swap to be entered...
-    readLn :: IO Int -- Read swap
+  swapNodesFunctions <- replicateM numberOfSwaps $ do -- For each swap to be entered...
+    depthMultiple <- readLn :: IO Int -- Read swap depth multiple
+    return (swapNodes depthMultiple) -- Return partially applied swapNodes function
   
-  print swaps
+  let firstTree = buildTree $ reversedNodeList siblingPairs -- The first tree build from list of entered sibling pairs
 
-  let nodes = reversedNodeList siblingPairs
-      binaryTree = buildTree nodes
-
-  putStrLn $ drawTree $ show <$> binaryTree
-  print $ inOrderTraversal binaryTree
-
-  -- print $ inOrderTraversal binaryTree
-
-  -- numberOfQueries <- readLn :: IO Int -- Read and bind number of queries to be entered
-  -- queries <- replicateM numberOfQueries $ do -- For each query to be entered...
-  --   readLn :: IO Int -- Read query
-
-  -- print queries
-
-  return ()
+  swapNodesAndPrintInOrderTraversal swapNodesFunctions firstTree -- Preform swap nodes functions on tree printing the in order traversal of each new tree and passing the new tree along to be swapped with the next swap nodes function
