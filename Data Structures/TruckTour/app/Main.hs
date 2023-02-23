@@ -13,12 +13,17 @@ data PetrolPump =
 -- Whether a tour can be completed when starting with a given amount of petrol in the tank and from the first petrol pump in a given list
 -- Example: tourCanBeCompleted 0 [PetrolPump 10 5, PetrolPump 0 5] = True
 tourCanBeCompleted :: Int -> S.Seq PetrolPump -> Bool
+-- There is no more petrol pumps to visit (the tour is complete)
 tourCanBeCompleted _ S.Empty = True
 tourCanBeCompleted amountOfPetrolInTank (petrolPump S.:<| restOfPetrolPumps)
+  -- The truck will run out of gas before the next petrol pump
   | usedPetrolTank < 0 = False
+  -- The truck will make it to the next petrol pump
   | otherwise          = tourCanBeCompleted usedPetrolTank restOfPetrolPumps
   where
+    -- The amount of petrol in the tank after being filled with available petrol at current pump
     filledPetrolTank = amountOfPetrolInTank + amountOfPetrolAvailable petrolPump
+    -- The amount of petrol left after filled tank is driven to next petrol pump
     usedPetrolTank   = filledPetrolTank - distanceToNextPump petrolPump
 
 -- The index of the first petrol pump from a given list of petrol pumps that can complete the tour (won't run out of petrol)
@@ -26,7 +31,9 @@ tourCanBeCompleted amountOfPetrolInTank (petrolPump S.:<| restOfPetrolPumps)
 -- Note: This function can run infinitely if there is not a petrol pump that can complete the tour
 firstPetrolPumpThatCanCompleteTour :: S.Seq PetrolPump -> Int
 firstPetrolPumpThatCanCompleteTour petrolPumps@(petrolPump S.:<| restOfPetrolPumps)
+  -- The tour can be completed from the current petrol pump
   | tourCanBeCompleted 0 petrolPumps = 0
+  -- The tour cannot be completed from the current petrol pump
   | otherwise                        = 1 + firstPetrolPumpThatCanCompleteTour (restOfPetrolPumps S.|> petrolPump)
 
 
