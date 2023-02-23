@@ -2,6 +2,7 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 
+-- Datatype for a petrol pump with an amount of petrol available and the distance to the next pump
 data PetrolPump =
   PetrolPump
     { amountOfPetrolAvailable :: Int
@@ -20,9 +21,11 @@ tourCanBeCompleted amountOfPetrolInTank (petrolPump : restOfPetrolPumps)
     usedPetrolTank   = filledPetrolTank - distanceToNextPump petrolPump
 
 -- The index of the first petrol pump from a given list of petrol pumps that can complete the tour (won't run out of petrol)
+-- Example: firstPetrolPumpThatCanCompleteTour [PetrolPump 1 5, PetrolPump 10 3, PetrolPump 3 4] = 1
+-- Note: This function can run infinitely if there is not a petrol pump that can complete the tour
 firstPetrolPumpThatCanCompleteTour :: [PetrolPump] -> Int
 firstPetrolPumpThatCanCompleteTour petrolPumps@(petrolPump : restOfPetrolPumps)
-  | tourCanBeCompleted 0 petrolPumps = 1
+  | tourCanBeCompleted 0 petrolPumps = 0
   | otherwise                        = 1 + firstPetrolPumpThatCanCompleteTour (restOfPetrolPumps ++ [petrolPump])
 
 
@@ -33,4 +36,4 @@ main = do
     (amountOfPetrolAvailable : distanceToNextPump : _) <- (read <$>) . words <$> getLine :: IO [Int] -- Read amount of petrol to give and distance to next pump
     return $ PetrolPump amountOfPetrolAvailable distanceToNextPump -- Return entered petrol pump
 
-  print petrolPumps
+  print $ firstPetrolPumpThatCanCompleteTour petrolPumps -- Print the index of the first petrol pump that can complete the tour from the list of entered petrol pumps
