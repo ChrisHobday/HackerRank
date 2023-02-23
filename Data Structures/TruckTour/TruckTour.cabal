@@ -31,6 +31,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 executable TruckTour-exe
@@ -43,6 +44,7 @@ executable TruckTour-exe
   build-depends:
       TruckTour
     , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 test-suite TruckTour-test
@@ -56,4 +58,5 @@ test-suite TruckTour-test
   build-depends:
       TruckTour
     , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
