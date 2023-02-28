@@ -1,6 +1,7 @@
 module Main (main) where
 
-import Lib
+fn n = undefined
 
-main :: IO ()
-main = someFunc
+main = do
+  n <- readLn :: IO Int
+  print (fn(n))
