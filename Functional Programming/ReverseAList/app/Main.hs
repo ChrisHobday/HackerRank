@@ -1,8 +1,6 @@
 module Main (main) where
 
-rev l = undefined
-
-main :: IO ()
-main = do
-  list <- getContents
-  print $ rev list
+-- A given list reversed
+rev :: [a] -> [a]
+rev (element : otherElements) = rev otherElements ++ [element]
+rev []                        = []
