@@ -1,5 +1,8 @@
 module Main (main) where
 
+rev l = undefined
+
 main :: IO ()
 main = do
-  print "ReverseAList"
+  list <- getContents
+  print $ rev list
