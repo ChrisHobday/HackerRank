@@ -1,6 +1,8 @@
 module Main (main) where
 
-import Lib
+f arr = undefined-- Fill up this function body
 
-main :: IO ()
-main = someFunc
+-- This part handles the Input/Output and can be used as it is. Do not change or modify it.
+main = do
+	inputdata <- getContents
+	putStrLn $ show $ f $ map (read :: String -> Int) $ lines inputdata
