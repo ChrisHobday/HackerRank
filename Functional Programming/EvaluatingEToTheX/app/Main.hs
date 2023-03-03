@@ -30,6 +30,6 @@ main = do
   numberOfNumberToBeEntered <- readLn :: IO Int -- Read and bind number of numbers to be entered
 
   numbers <- replicateM numberOfNumberToBeEntered $ do -- For each number to be entered...
-    readLn :: IO Float -- Read number
+    readLn :: IO Double -- Read number
   
   mapM_ (print . evaluate) numbers -- Print the entered list of numbers with the evaluate function applied to them
