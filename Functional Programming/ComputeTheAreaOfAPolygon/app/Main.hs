@@ -2,6 +2,7 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 
+-- area = 1/2 perimeter * apothem
 area = undefined
 
 main :: IO ()
