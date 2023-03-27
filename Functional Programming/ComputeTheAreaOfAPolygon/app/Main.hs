@@ -2,7 +2,8 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 
--- area = 1/2 perimeter * apothem
+-- This solution uses the shoelace formula https://en.wikipedia.org/wiki/Shoelace_formula to calculate the area of a simple polygon (represented as a list of points)
+
 area = undefined
 
 main :: IO ()
