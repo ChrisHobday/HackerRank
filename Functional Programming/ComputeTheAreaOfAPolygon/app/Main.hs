@@ -4,9 +4,12 @@ import Control.Monad ( replicateM )
 
 -- This solution uses the shoelace formula https://en.wikipedia.org/wiki/Shoelace_formula to calculate the area of a simple polygon (represented as a list of points)
 
+-- The area of a polygon (represented as a list of points)
+-- Example: area [(0, 0), (0, 1), (1, 1), (1, 0)] = 1.0
 area :: Fractional a => [(a, a)] -> a
 area (firstPoint : restOfPoints) = abs $ area' (firstPoint : restOfPoints ++ [firstPoint]) / 2
-  where 
+  where
+    -- A helper function so that the parent can add the first point to the end
     area' ((x, y) : (x', y') : restOfPoints) = (x * y' - x' * y) + area' ((x', y') : restOfPoints)
     area' _                                  = 0
 
