@@ -4,7 +4,11 @@ import Control.Monad ( replicateM )
 
 -- This solution uses the shoelace formula https://en.wikipedia.org/wiki/Shoelace_formula to calculate the area of a simple polygon (represented as a list of points)
 
-area = undefined
+area :: Fractional a => [(a, a)] -> a
+area (firstPoint : restOfPoints) = abs $ area' (firstPoint : restOfPoints ++ [firstPoint]) / 2
+  where 
+    area' ((x, y) : (x', y') : restOfPoints) = (x * y' - x' * y) + area' ((x', y') : restOfPoints)
+    area' _                                  = 0
 
 main :: IO ()
 main = do
