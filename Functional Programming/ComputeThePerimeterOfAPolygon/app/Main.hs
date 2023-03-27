@@ -4,12 +4,12 @@ import Control.Monad ( replicateM )
 
 -- The distance between a given two points
 -- Example: distanceBetweenTwoPoints (0, 0) (0, 1) = 1
--- distanceBetweenTwoPoints :: (RealFrac a, Floating a, Integral b) => (a, a) -> (a, a) -> b
+distanceBetweenTwoPoints :: Floating a => (a, a) -> (a, a) -> a
 distanceBetweenTwoPoints (x, y) (x', y') = sqrt $ (x' - x)^2 + (y' - y)^2
 
 -- The lengths of lines of a given polygon (distance between each of the points of a polygon in order)
 -- Example: lineLengths [(0, 0), (0, 1), (1, 1), (1, 0)] = [1, 1, 1, 1]
--- lineLengths :: (RealFrac a1, Floating a1, Integral a2) => [(a1, a1)] -> [a2]
+lineLengths :: Floating a => [(a, a)] -> [a]
 lineLengths (firstPoint : restOfPoints) = lineLengths' (firstPoint : restOfPoints ++ [firstPoint])
   where 
     -- A helper function so that the parent can add the first point to the end in order to get the last line length between the last point and the first point
@@ -18,7 +18,7 @@ lineLengths (firstPoint : restOfPoints) = lineLengths' (firstPoint : restOfPoint
 
 -- The perimeter of a given polygon (as a list of points)
 -- Example: perimeter [(0, 0), (0, 1), (1, 1), (1, 0)] = 4
--- perimeter :: (RealFrac a1, Floating a1, Integral a) => [(a1, a1)] -> a
+perimeter :: Floating a => [(a, a)] -> a
 perimeter points = sum $ lineLengths points
 
 main :: IO ()
