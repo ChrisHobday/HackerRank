@@ -1,6 +1,10 @@
 module Main (main) where
 
-fib n = undefined
+-- The fibonacci number at the given position
+-- Example: fib 3 = 1
+fib 1 = 0
+fib 2 = 1
+fib n = fib (n - 1) + fib (n - 2)
 
 main :: IO ()
 main = do
