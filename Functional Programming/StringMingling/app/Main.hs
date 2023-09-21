@@ -1,13 +1,13 @@
 module Main (main) where
 
--- import Text.Printf (printf)
+-- A string wiith mingled characters of two given strings (starting with the first string)
+mingled :: [Char] -> [Char] -> [Char]
+mingled [] _ = ""
+mingled _ [] = ""
+mingled (character : restOfString) (character2 : restOfString2) = character : character2 : mingled restOfString restOfString2
 
--- -- This function should return a list [area, volume].
--- -- solve :: Int -> Int -> [Int] -> [Int] -> [Double]
--- solve l r a b = [2.0, 4.0]
-
--- --Input/Output.
--- main :: IO ()
--- main = getContents >>= mapM_ (printf "%.1f\n"). (\[a, b, [l, r]] -> solve l r a b). map (map read. words). lines
-
-main = getContents >>= print . lines
+main :: IO ()
+main = do
+  string <- getLine -- Read and bind the first string
+  string2 <- getLine -- Read and bind the second string
+  putStrLn $ mingled string string2 -- Print the two input strings mingled together
