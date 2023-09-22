@@ -13,9 +13,9 @@ prefixCompression string string2 = prefixCompression' 0 "" string string2
           -- There was not previously matching charactes
           0 -> show (length string') ++ " " ++ string' ++ "\n" ++ show (length string2') ++ " " ++ string2'
           -- There was previously matchiing characters
-          _ -> show numberOfSameCharacters ++ " " ++ sameCharacters ++ "\n" ++ show (length string') ++ " " ++ string' ++ "\n" ++ show (length string2') ++ " " ++ string2'
+          _ -> show numberOfSameCharacters ++ " " ++ (reverse sameCharacters) ++ "\n" ++ show (length string') ++ " " ++ string' ++ "\n" ++ show (length string2') ++ " " ++ string2'
       -- Otherwise (First character of both strings match)
-      | otherwise = prefixCompression' (numberOfSameCharacters + 1) (sameCharacters ++ [firstCharacter]) restofString restofString2
+      | otherwise = prefixCompression' (numberOfSameCharacters + 1) (firstCharacter : sameCharacters) restofString restofString2
       where
         (firstCharacter : restofString)    = string'
         (firstCharacter2 : restofString2)  = string2'
