@@ -16,4 +16,8 @@ prefixCompression sameCharacters string string2
     (firstCharacter2 : restofString2)  = string2
 
 main :: IO ()
-main = undefined
+main = do
+  string <- getLine -- Read and bind first string
+  string2 <- getLine -- Read and bind second string
+
+  putStr $ prefixCompression "" string string2 -- Print the prefix compression of the two entered strings
