@@ -4,14 +4,22 @@ import Control.Monad ( replicateM )
 
 -- A given string with it's even characters swapped with the previous character
 -- Ex: swapEvenCharacters "abcde" = "badce"
+-- swapEvenCharacters :: [a] -> [a]
+-- swapEvenCharacters string
+--   -- Length of given string is less than 2 (not enough characters to swap)
+--   | length string < 2 = string
+--   -- Otherwise (length of given string is not less than 2)
+--   | otherwise         = char2 : char1 : swapEvenCharacters restOfChars
+--   where
+--     (char1 : char2 : restOfChars) = string
+
+-- A given string with it's even characters swapped with the previous character
+-- Ex: swapEvenCharacters "abcde" = "badce"
 swapEvenCharacters :: [a] -> [a]
-swapEvenCharacters string
-  -- Length of given string is less than 2 (not enough characters to swap)
-  | length string < 2 = string
-  -- Otherwise (length of given string is not less than 2)
-  | otherwise         = char2 : char1 : swapEvenCharacters restOfChars
-  where
-    (char1 : char2 : restOfChars) = string
+-- There are enough characters to swap (2 or more)
+swapEvenCharacters (char1 : char2 : restOfChars) = char2 : char1 : swapEvenCharacters restOfChars
+-- Otherwise (There aren't enough character to swap (less than 2))
+swapEvenCharacters string                        = string
 
 main :: IO ()
 main = do
