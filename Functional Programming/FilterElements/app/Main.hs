@@ -1,19 +1,28 @@
 module Main (main) where
 
-import qualified Data.IntMap as Map
 import Control.Monad ( replicateM )
 
--- The number of times each integer occurs in a given list (as a key-value map)
--- Ex: integerOccurencesMap [1,2,3,1] Map.empty = fromList [(1,2),(2,1),(3,1)]
--- integerOccurencesMap :: (Foldable t, Ord k, Num a) => t k -> Map.Map k a -> Map.Map k a
-integerOccurencesMap :: (Foldable t, Num a) => t Map.Key -> Map.IntMap a -> Map.IntMap a
-integerOccurencesMap integers integerMap = foldl (\map' integer' -> Map.insertWith (+) integer' 1 map') integerMap integers
+-- Add a given integer to a given list of occurences or update the occurence counter for that given integer
+-- Ex: addToIntegerList 5 [(1,1),(5,3)] = [(1,1),(5,4)]
+addToIntegerList :: (Eq t, Num b) => t -> [(t, b)] -> [(t, b)]
+addToIntegerList integer ((integer', numberOfOccurences) : integers)
+  -- The given integer has been found in the given list of integers
+  | integer == integer' = (integer', numberOfOccurences + 1) : integers
+  -- Otherwise, the given integer has not found in the given list of integers (keep looking)
+  | otherwise           = (integer', numberOfOccurences) : addToIntegerList integer integers
+-- The given integer is not in the given list of integers
+addToIntegerList integer [] = [(integer, 1)]
 
--- A list of integers the occur the given amount of times
--- Ex: filterElements 2 [1,1,2,3,2] = [1,2]
--- filterElements :: (Foldable t, Ord a, Ord k, Num a) => a -> t k -> [k]
-filterElements :: (Ord a, Foldable t, Num a) => a -> t Map.Key -> [Map.Key]
-filterElements repetitionCount integers = Map.keys $ Map.filter (>= repetitionCount) $ integerOccurencesMap integers Map.empty
+-- A list of the number of times a given list of integers each occurs
+-- integerOccurencesList [1,1,2,5] [] = [(1,2),(2,1),(5,1)]
+integerOccurencesList :: (Eq t, Num b) => [t] -> [(t, b)] -> [(t, b)]
+integerOccurencesList (integer : restOfIntegers) integerList = integerOccurencesList restOfIntegers $ addToIntegerList integer integerList
+integerOccurencesList [] integerList                         = integerList
+
+-- A list of integers from a given list of integers that occur at least the given amount of times
+-- filterElements 2 [1,1,2,4,5,4,4] = [1,4]
+filterElements :: (Ord a, Num a, Eq b) => a -> [b] -> [b]
+filterElements repetitionCount integers = fst <$> filter (\(_, numberOfOccurences) -> numberOfOccurences >= repetitionCount) (integerOccurencesList integers [])
 
 main :: IO ()
 main = do
