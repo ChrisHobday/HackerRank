@@ -6,9 +6,9 @@ cabal-version: 2.2
 
 name:           FilterElements
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/ChrisHobday/FilterElements#readme>
-homepage:       https://github.com/ChrisHobday/FilterElements#readme
-bug-reports:    https://github.com/ChrisHobday/FilterElements/issues
+description:    Please see the README on GitHub at <https://github.com/ChrisHobday/HackerRank/tree/main/Functional%20Programming/FilterElements#readme>
+homepage:       https://github.com/ChrisHobday/HackerRank#readme
+bug-reports:    https://github.com/ChrisHobday/HackerRank/issues
 author:         Chris Hobday
 maintainer:     Hobday.Chris@protonmail.com
 copyright:      2023 Chris Hobday
@@ -21,11 +21,9 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/ChrisHobday/FilterElements
+  location: https://github.com/ChrisHobday/HackerRank
 
 library
-  exposed-modules:
-      Lib
   other-modules:
       Paths_FilterElements
   autogen-modules:
@@ -35,6 +33,8 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , containers
+    , unordered-containers
   default-language: Haskell2010
 
 executable FilterElements-exe
@@ -49,6 +49,8 @@ executable FilterElements-exe
   build-depends:
       FilterElements
     , base >=4.7 && <5
+    , containers
+    , unordered-containers
   default-language: Haskell2010
 
 test-suite FilterElements-test
@@ -64,4 +66,6 @@ test-suite FilterElements-test
   build-depends:
       FilterElements
     , base >=4.7 && <5
+    , containers
+    , unordered-containers
   default-language: Haskell2010
