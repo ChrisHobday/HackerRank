@@ -19,10 +19,18 @@ integerOccurencesList :: (Eq t, Num b) => [t] -> [(t, b)] -> [(t, b)]
 integerOccurencesList (integer : restOfIntegers) integerList = integerOccurencesList restOfIntegers $ addToIntegerList integer integerList
 integerOccurencesList [] integerList                         = integerList
 
+-- A list of integers who have the required number of occurences from a given list of integers and their number of occurences
+-- Ex: removeIntegers 2 [(1,3),(2,1)] = [1]
+removeIntegers :: Ord t => t -> [(a, t)] -> [a]
+removeIntegers repetitionCount ((integer, numberOfOccurences) : resotOfIntegerOccurences)
+  | numberOfOccurences >= repetitionCount = integer : removeIntegers repetitionCount resotOfIntegerOccurences
+  | otherwise                             = removeIntegers repetitionCount resotOfIntegerOccurences
+removeIntegers _ [] = []
+
 -- A list of integers from a given list of integers that occur at least the given amount of times
 -- filterElements 2 [1,1,2,4,5,4,4] = [1,4]
 filterElements :: (Ord a, Num a, Eq b) => a -> [b] -> [b]
-filterElements repetitionCount integers = fst <$> filter (\(_, numberOfOccurences) -> numberOfOccurences >= repetitionCount) (integerOccurencesList integers [])
+filterElements repetitionCount integers = removeIntegers repetitionCount (integerOccurencesList integers [])
 
 main :: IO ()
 main = do
