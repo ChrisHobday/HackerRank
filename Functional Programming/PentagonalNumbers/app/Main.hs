@@ -2,12 +2,9 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 
--- Note: This recursive solution is too slow to pass some of the test cases
-
 -- The pentagonal number of a given number (the number of dots that can fit in a pentagon where each side's length is a given number)
-pentagonalNumber :: (Eq t, Num t) => t -> t
-pentagonalNumber 1      = 1
-pentagonalNumber number = (number - 1) * 3 + 1 + pentagonalNumber (number - 1)
+pentagonalNumber :: Integral a => a -> a
+pentagonalNumber number = (3 * number * number - number) `div` 2
 
 main :: IO ()
 main = do
