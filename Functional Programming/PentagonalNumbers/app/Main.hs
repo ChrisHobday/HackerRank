@@ -2,7 +2,7 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 
--- Note: This recursive solution is too slow to past some of the test cases
+-- Note: This recursive solution is too slow to pass some of the test cases
 
 -- The pentagonal number of a given number (the number of dots that can fit in a pentagon where each side's length is a given number)
 pentagonalNumber :: (Eq t, Num t) => t -> t
