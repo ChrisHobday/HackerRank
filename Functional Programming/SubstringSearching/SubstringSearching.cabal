@@ -6,9 +6,9 @@ cabal-version: 2.2
 
 name:           SubstringSearching
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/ChrisHobday/SubstringSearching#readme>
-homepage:       https://github.com/ChrisHobday/SubstringSearching#readme
-bug-reports:    https://github.com/ChrisHobday/SubstringSearching/issues
+description:    Please see the README on GitHub at <https://github.com/ChrisHobday/HackerRank/tree/main/Functional%20Programming/SubstringSearching#readme>
+homepage:       https://github.com/ChrisHobday/HackerRank#readme
+bug-reports:    https://github.com/ChrisHobday/HackerRank/issues
 author:         Chris Hobday
 maintainer:     Hobday.Chris@protonmail.com
 copyright:      2023 Chris Hobday
@@ -21,11 +21,9 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/ChrisHobday/SubstringSearching
+  location: https://github.com/ChrisHobday/HackerRank
 
 library
-  exposed-modules:
-      Lib
   other-modules:
       Paths_SubstringSearching
   autogen-modules:
@@ -34,7 +32,9 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      base >=4.7 && <5
+      array >=0.5.4.0
+    , base >=4.7 && <5
+    , vector >=0.12.0.3
   default-language: Haskell2010
 
 executable SubstringSearching-exe
@@ -48,7 +48,9 @@ executable SubstringSearching-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       SubstringSearching
+    , array >=0.5.4.0
     , base >=4.7 && <5
+    , vector >=0.12.0.3
   default-language: Haskell2010
 
 test-suite SubstringSearching-test
@@ -63,5 +65,7 @@ test-suite SubstringSearching-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       SubstringSearching
+    , array >=0.5.4.0
     , base >=4.7 && <5
+    , vector >=0.12.0.3
   default-language: Haskell2010
