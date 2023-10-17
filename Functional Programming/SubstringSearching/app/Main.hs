@@ -4,51 +4,55 @@ import Control.Monad
   ( replicateM )
 import Data.Array
   ( Array
-  , array
   , listArray
-  , bounds
-  , (!)
-  )
+  , (!) )
 
--- A KMP table for a given pattern, the pattern as an array and the lengt of the pattern (used to do a KMP substring search)
--- Ex: kmpTableAndPatternArrayPatternLength "abcababc" = (array (0,7) [(0, 'a'),(1, 'b'),(2, 'c'),(3, 'a'),(4, 'b'),(5, 'a'),(6, 'b'),(7, 'c')], array (0, 7) [(0, 0),(1, 0),(2, 0),(3, 1),(4, 2),(5, 0),(6, 0),(7, 0)])
--- Note: This agorithm does not set j to the value at the previous index in the table being created and so is not as efficient as it could be
-kmpTablePatternArrayPatternLength :: Eq a => [a] -> (Array Int a, Array Int Int, Int)
-kmpTablePatternArrayPatternLength pat = (patArray, kmpTable, patLength)
+-- The length of a given pattern, that pattern as an array and a KMP table for a given pattern (used to do a KMP substring search)
+-- Ex: kmpPatternLengthPatternArrayTable "abcababc" = (8, array (0, 7) [(0, 'a'),(1, 'b'),(2, 'c'),(3, 'a'),(4, 'b'),(5, 'a'),(6, 'b'),(7, 'c')], array (0, 7) [(0, 0),(1, 0),(2, 0),(3, 1),(4, 2),(5, 1),(6, 2),(7, 3)])
+kmpPatternLengthPatternArrayTable :: Eq a => [a] -> (Int, Array Int a, Array Int Int)
+kmpPatternLengthPatternArrayTable pat = (patLength, patArray, kmpTable)
   where
     patLength = length pat
     patArray  = listArray (0, patLength - 1) pat
-    kmpTable     = listArray (0, patLength - 1) $ 0 : gen 0 1 False
-    gen j i previousMatch
+    kmpTable  = listArray (0, patLength - 1) $ 0 : gen 0 1
+    gen j i
       | (patArray ! j) /= (patArray ! i) =
-        if previousMatch
+        if j /= 0
           then
-            0 : gen 0 (i + 1) False
-            -- gen (kmpTable ! (j - 1)) i False
+            gen 0 i
+            -- 0 : gen 0 (i + 1)
+            -- gen (kmpTable ! (j - 1)) i
           else
-            0 : gen j (i + 1) False
-      | otherwise                        = (j + 1) : gen (j + 1) (i + 1) True
+            0 : gen j (i + 1)
+      | otherwise                        = (j + 1) : gen (j + 1) (i + 1)
 
--- TODO: Find out why kmpSubStriingSearch "aab" "ab" fails and gives "NO"
+-- TODO: Find out why kmpSubstringSearch "aaaab" "aaab" fails and gives "NO"
+kmpSubstringSearch :: Eq a => [a] -> [a] -> String
 kmpSubstringSearch string pat = kmpSubstringSearch' string 0
   where
-    (patArray, kmpTable, patLength) = kmpTablePatternArrayPatternLength pat
+    (patLength, patArray, kmpTable) = kmpPatternLengthPatternArrayTable pat
     -- Subfunction so that patArray and kmpTable are only computed once
-    kmpSubstringSearch' (char : chars) j
+    kmpSubstringSearch' string' j
       -- There was a missmatch and j cannot move further back (there is no more prefix/suffix to check)
-      | j == (-1)            = kmpSubstringSearch' chars 0
+      | j == (-1)            = kmpSubstringSearch' string' 0
       -- J is at the end of the pattern (given pattern is a substring of given string)
-      | j == patLength = "YES"
+      | j == patLength       = "YES"
+      -- There are no characters in given string to check
+      | null string'         = "NO"
       -- The current character matches the current j index of the pattern array
       | char == patArray ! j = kmpSubstringSearch' chars (j + 1)
-      -- Otherwise 
-      | otherwise            = kmpSubstringSearch' (char : chars) ((kmpTable ! j) - 1)
-    -- There are no characters in given string to check
-    kmpSubstringSearch' [] j
-      -- J is at the end of the pattern (given pattern is a substring of given string)
-      | j == patLength = "YES"
-      -- Otherwise j did not reach the end of the pattern (given pattern is not a substring of given string)
-      | otherwise      = "NO"
+      -- Otherwise the current character does not match the current j index of the pattern array
+      | otherwise            =
+        if j == 0
+          then
+            -- There was no match previously (it's safe to drop the first character)
+            kmpSubstringSearch' chars ((kmpTable ! j) - 1)
+          else
+            -- There was a match previously (we must keep the first character)
+            kmpSubstringSearch' string' ((kmpTable ! j) - 1)
+      where
+        -- The first character and the rest of the characters of the string
+        (char : chars) = string'
 
 main :: IO ()
 main = do
