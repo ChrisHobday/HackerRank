@@ -26,7 +26,8 @@ kmpPatternLengthPatternArrayTable pat = (patLength, patArray, kmpTable)
             0 : gen j (i + 1)
       | otherwise                        = (j + 1) : gen (j + 1) (i + 1)
 
--- TODO: Find out why kmpSubstringSearch "aaaab" "aaab" fails and gives "NO"
+-- Whether a give pattern exists in a given string in the form of either "YES" or "NO" (using KMP substring search)
+-- Ex: kmpSubstringSearch "abcddeffg"  "def" = "YES"
 kmpSubstringSearch :: Eq a => [a] -> [a] -> String
 kmpSubstringSearch string pat = kmpSubstringSearch' string 0
   where
@@ -49,7 +50,7 @@ kmpSubstringSearch string pat = kmpSubstringSearch' string 0
             kmpSubstringSearch' chars ((kmpTable ! j) - 1)
           else
             -- There was a match previously (we must keep the first character)
-            kmpSubstringSearch' string' ((kmpTable ! j) - 1)
+            kmpSubstringSearch' string' (kmpTable ! (j  -  1))
       where
         -- The first character and the rest of the characters of the string
         (char : chars) = string'
@@ -58,7 +59,7 @@ main :: IO ()
 main = do
   testCases <- readLn :: IO Int -- Read and bind the number of test cases to be entered
   subtringMatches <- replicateM testCases $ do -- Replicate the following action the given number of test cases times
-    text <- getLine -- Read and bind the text string to search for the given pattern in
+    string <- getLine -- Read and bind the text string to search for the given pattern in
     pat <- getLine -- Read and bind the pattern to search the given text string for
-    return $ kmpSubstringSearch text pat -- Return whether the givne pat exists in the given text string (using kmp substring search)
+    return $ kmpSubstringSearch string pat -- Return whether the given pat exists in the given text string (using kmp substring search)
   mapM_ putStrLn subtringMatches -- Print whether each test cases given pattern exists in each test cases given text string (each on a seperate line)
