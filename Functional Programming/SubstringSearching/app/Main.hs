@@ -15,15 +15,18 @@ kmpPatternLengthPatternArrayTable pat = (patLength, patArray, kmpTable)
     patLength = length pat
     patArray  = listArray (0, patLength - 1) pat
     kmpTable  = listArray (0, patLength - 1) $ 0 : gen 0 1
+    -- A KMP table for the given pattern (minus the first 0, as a  list)
     gen j i
+      -- The character at given position j in patArray is not the same as character at given position i in patArray
       | (patArray ! j) /= (patArray ! i) =
         if j /= 0
+          -- Given j is not 0
           then
             gen 0 i
-            -- 0 : gen 0 (i + 1)
-            -- gen (kmpTable ! (j - 1)) i
+          --- Given j is 0
           else
             0 : gen j (i + 1)
+      -- Otherwise the character at given position j in patArray is the same as character at given position i in patArray
       | otherwise                        = (j + 1) : gen (j + 1) (i + 1)
 
 -- Whether a give pattern exists in a given string in the form of either "YES" or "NO" (using KMP substring search)
@@ -45,11 +48,11 @@ kmpSubstringSearch string pat = kmpSubstringSearch' string 0
       -- Otherwise the current character does not match the current j index of the pattern array
       | otherwise            =
         if j == 0
+          -- There was no match previously (it's safe to drop the first character)
           then
-            -- There was no match previously (it's safe to drop the first character)
             kmpSubstringSearch' chars ((kmpTable ! j) - 1)
+          -- There was a match previously (we must keep the first character)
           else
-            -- There was a match previously (we must keep the first character)
             kmpSubstringSearch' string' (kmpTable ! (j  -  1))
       where
         -- The first character and the rest of the characters of the string
