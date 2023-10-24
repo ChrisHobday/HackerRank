@@ -33,21 +33,30 @@ sequenceSums integers maximumNumberOfSums
     -- The maximum sum sequence along with the leftover integer list
     (maximumSumSequence, leftovers) = maximum $ allSequenceSumsAndLeftovers [] integers
 
-kadaneMaxSum currentSum bestSum (number : numbers) = kadaneMaxSum newCurrentSum newBestSum numbers
-  where
-    newCurrentSum = max number (currentSum + number)
-    newBestSum    = max bestSum newCurrentSum
-kadaneMaxSum _ bestSum [] = bestSum
-
--- kadaneMaxSum currentSum bestSum leftovers (number : numbers)
---   | number > possibleNewCurrentSum = kadaneMaxSum
+-- kadaneMaxSum currentSum bestSum (number : numbers) = kadaneMaxSum newCurrentSum newBestSum numbers
 --   where
---     possibleNewCurrentSumAndLeftovers
---       number > (currentSum + number) = (number, )
---     --   | number > (currentSum + number) = kadaneMaxSum number
---     -- newCurrentSum = max number (currentSum + number)
---     -- newBestSum    = max bestSum newCurrentSum
--- kadaneMaxSum _ bestSum leftovers [] = (bestSum, leftovers)
+--     newCurrentSum = max number (currentSum + number)
+--     newBestSum    = max bestSum newCurrentSum
+-- kadaneMaxSum _ bestSum [] = bestSum
+
+kadaneMaxSum currentSum currentSequence bestSum bestSequence leftovers (number : numbers) = kadaneMaxSum newCurrentSum newCurrentSequence newBestSum newBestSequence newLeftovers numbers
+  where
+    (newCurrentSum, newCurrentSequence, leftoverPrefix)
+      = if number > (currentSum + number)
+        then
+          (number, [number], currentSequence)
+        else
+          (currentSum + number, currentSequence ++ [number], [])
+    (newBestSum, newBestSequence, leftoverSuffix)
+      = if bestSum > newCurrentSum
+          then
+            (bestSum, bestSequence, [])
+          else
+            (newCurrentSum, newCurrentSequence, [])
+    newLeftovers  = leftovers ++ leftoverPrefix ++ leftoverSuffix
+kadaneMaxSum currentSum currentSequence bestSum bestSequence leftovers [] = (bestSum, bestSequence, currentSequence, leftovers)
+
+
 
 
 main :: IO ()
