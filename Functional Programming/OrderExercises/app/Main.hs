@@ -33,6 +33,23 @@ sequenceSums integers maximumNumberOfSums
     -- The maximum sum sequence along with the leftover integer list
     (maximumSumSequence, leftovers) = maximum $ allSequenceSumsAndLeftovers [] integers
 
+kadaneMaxSum currentSum bestSum (number : numbers) = kadaneMaxSum newCurrentSum newBestSum numbers
+  where
+    newCurrentSum = max number (currentSum + number)
+    newBestSum    = max bestSum newCurrentSum
+kadaneMaxSum _ bestSum [] = bestSum
+
+-- kadaneMaxSum currentSum bestSum leftovers (number : numbers)
+--   | number > possibleNewCurrentSum = kadaneMaxSum
+--   where
+--     possibleNewCurrentSumAndLeftovers
+--       number > (currentSum + number) = (number, )
+--     --   | number > (currentSum + number) = kadaneMaxSum number
+--     -- newCurrentSum = max number (currentSum + number)
+--     -- newBestSum    = max bestSum newCurrentSum
+-- kadaneMaxSum _ bestSum leftovers [] = (bestSum, leftovers)
+
+
 main :: IO ()
 main = do
   (_ : maximumNumberOfSums : _) <- (read <$>) . words <$> getLine :: IO [Int] -- Read and bind the maximum number of sums to output (ignore the number of integers to be entered as we do not need it)
