@@ -2,30 +2,44 @@ module Main (main) where
 
 import Data.List
   ( intercalate )
+-- import qualified Data.Sequence as Seq
 
+-- A given list (y : ys) with the first sequence of (x : xs) removed
+-- Ex: removeFirstSubsequence [1,2] [1,2,3,4] [] = [3,4] 
 removeFirstSubsequence (x : xs) (y : ys) matches
+  -- Current elements are the same
   | x == y       = removeFirstSubsequence xs ys (matches <> [x])
+  -- There are no previous matches
   | null matches = y : removeFirstSubsequence (x : xs) ys []
+  -- Otherwise the current elements are different and there are no previous matches
   | otherwise    = matches <> removeFirstSubsequence (matches <> (x : xs)) (y : ys) []
+-- There is no (x : xs)
 removeFirstSubsequence [] ys _ = ys
+-- There is no (y : ys)
 removeFirstSubsequence _ [] matches = matches
 
+-- The best subsequence sum and the subsequence itself of a given list of numbers
+-- Ex: kadaneBestSumAndSequence 0 [] 0 [] [1,-2,5] = (5,[5])
 kadaneBestSumAndSequence currentSum currentSequence bestSum bestSequence (number : numbers) = kadaneBestSumAndSequence newCurrentSum newCurrentSequence newBestSum newBestSequence numbers
   where
+    -- The new current sum and sequence
     (newCurrentSum, newCurrentSequence)
       = if number > (currentSum + number)
         then
           (number, [number])
         else
           (currentSum + number, currentSequence <> [number])
+    -- The new best sum and sequence
     (newBestSum, newBestSequence)
       = if newCurrentSum > bestSum
           then
             (newCurrentSum, newCurrentSequence)
           else
             (bestSum, bestSequence)
+-- There are no given numbers
 kadaneBestSumAndSequence _ _ bestSum bestSequence [] = (bestSum, bestSequence)
 
+-- The best subsequence sum and leftover elements of a list of numbers
 kadaneMaxSumAndLeftovers numbers = (bestSum, leftovers)
   where
     (bestSum, bestSequence) = kadaneBestSumAndSequence 0 [] 0 [] numbers
