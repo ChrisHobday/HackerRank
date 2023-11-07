@@ -15,7 +15,7 @@ removeFirstSubsequence (x Seq.:<| xs) (y Seq.:<| ys) matches
   -- There are no previous matches
   | null matches = y Seq.:<| removeFirstSubsequence (x Seq.:<| xs) ys Seq.empty
   -- Otherwise the current elements are different and there are no previous matches
-  | otherwise    = matches <> removeFirstSubsequence (matches <> (x Seq.:<| xs)) (y Seq.:<| ys) Seq.empty
+  | otherwise    = matches Seq.>< removeFirstSubsequence (matches Seq.>< (x Seq.:<| xs)) (y Seq.:<| ys) Seq.empty
 -- There is no xs
 removeFirstSubsequence Seq.Empty ys _ = ys
 -- There is no ys
