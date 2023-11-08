@@ -32,8 +32,10 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      base >=4.7 && <5
+      array
+    , base >=4.7 && <5
     , containers
+    , vector
   default-language: Haskell2010
 
 executable OrderExercises-exe
@@ -47,8 +49,10 @@ executable OrderExercises-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       OrderExercises
+    , array
     , base >=4.7 && <5
     , containers
+    , vector
   default-language: Haskell2010
 
 test-suite OrderExercises-test
@@ -63,6 +67,8 @@ test-suite OrderExercises-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       OrderExercises
+    , array
     , base >=4.7 && <5
     , containers
+    , vector
   default-language: Haskell2010
