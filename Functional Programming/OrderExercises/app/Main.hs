@@ -5,15 +5,6 @@ import Data.List
 import Data.Maybe
   ( listToMaybe )
 
--- collapse (currentSum : currentSums) (bestSum : bestSums)
---   -- This current best sum should be collapsed
---   | currentSum - bestSum > 0 = [currentSum]
---   -- | currentSum - bestSum > 0 = ([], currentSum)
---   -- This current best sum should not be collapsed
---   | otherwise                = bestSum : collapse currentSums bestSums
--- collapse [] _ = []
--- collapse _ [] = []
-
 collapse (currentSum : currentSums) (bestSum : bestSums)
   -- This current best sum should be collapsed
   | currentSum - bestSum > 0 = ([], [currentSum])
@@ -73,7 +64,7 @@ positiveSequences previousNumberNegative currentSums bestSums (number : numbers)
       --   -- Check best sums to potentially collapse some
       --   bestSums
 
-positiveSequences previousNumberNegative currentSums bestSums [] = show previousNumberNegative <> show currentSums <> show bestSums <> show newBestSums
+positiveSequences previousNumberNegative currentSums bestSums [] = newBestSums
   where
     newBestSums =
       -- There is a best sum in current sums to add to the list
@@ -82,7 +73,14 @@ positiveSequences previousNumberNegative currentSums bestSums [] = show previous
       else
         bestSums
 
-main = return ()
+-- sequenceSums :: (Num a, Ord a) => [a] -> Int -> [a]
+sequenceSums numbers maximumNumberOfSums = take maximumNumberOfSums (sortBy (flip compare) $ positiveSequences True [] [] numbers)
+
+main :: IO ()
+main = do
+  (_ : maximumNumberOfSums : _) <- (read <$>) . words <$> getLine :: IO [Int] -- Read and bind the maximum number of sums to output (ignore the number of numbers to be entered as we do not need it)
+  numbers <- (read <$>) . words <$> getLine :: IO [Int] -- Read and bind the list of numbers to calculate the list of sequence of sums of
+  mapM_ putStrLn (show <$> sequenceSums numbers maximumNumberOfSums) -- Print the sequence sums of the given list of numbers and maximum number of sums
 
 
 
