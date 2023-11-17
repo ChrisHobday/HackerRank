@@ -34,10 +34,13 @@ positiveSequences previousNumberNegative currentSums bestSums (number : numbers)
       else
         if previousNumberNegative then
         -- Negative positive (or first time being executed)
-        collapse (((+ number) <$> currentSums) <> [number]) bestSums
+          if not (null currentSums) && head currentSums == 0 then
+            collapse (((+ number) <$> tail currentSums) <> [number]) bestSums
+          else
+            collapse (((+ number) <$> currentSums) <> [number]) bestSums
         else
         -- Positive positive
-        collapse ((+ number) <$> currentSums) bestSums
+          collapse ((+ number) <$> currentSums) bestSums
 
     -- newCurrentSums =
     --   -- Sequence has gone from negative to positive or is the first time being executed
@@ -83,8 +86,7 @@ main :: IO ()
 main = do
   (_ : maximumNumberOfSums : _) <- (read <$>) . words <$> getLine :: IO [Int] -- Read and bind the maximum number of sums to output (ignore the number of numbers to be entered as we do not need it)
   numbers <- (read <$>) . words <$> getLine :: IO [Int] -- Read and bind the list of numbers to calculate the list of sequence of sums of
-  mapM_ putStrLn (show <$> positiveSequences True [] [] numbers) -- Print the sequence sums of the given list of numbers and maximum number of sums
-  -- mapM_ putStrLn (show <$> sequenceSums numbers maximumNumberOfSums) -- Print the sequence sums of the given list of numbers and maximum number of sums
+  mapM_ putStrLn (show <$> sequenceSums numbers maximumNumberOfSums) -- Print the sequence sums of the given list of numbers and maximum number of sums
 
 
 
