@@ -16,6 +16,13 @@ collapse (currentSum: currentSums) [] = ([currentSum], [])
 -- lock (currentSum : currentSums) (potentialBestSum : potentialBestSums) bestSums
 --   | currentSum < 0 = lock currentSums
 
+positiveSequences previousNumberNegative currentSums bestSums (number : numbers)
+  | numberNegative && previousNumberNegative = positiveSequences numberNegative ((+ number) <$> currentSums) bestSums
+  | numberNegative                           = positiveSequences numberNegative ((+ number) <$> currentSums) (bestSums <> [last currentSums])
+  | previousNumberNegative                   = collapse
+  where
+    numberNegative = number < 0
+
 positiveSequences previousNumberNegative currentSums bestSums (number : numbers) = positiveSequences numberNegative newCurrentSums newBestSums numbers                       
   where
     numberNegative = number < 0
