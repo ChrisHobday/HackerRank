@@ -16,38 +16,57 @@ collapse (currentSum: currentSums) [] = ([currentSum], [])
 -- lock (currentSum : currentSums) (potentialBestSum : potentialBestSums) bestSums
 --   | currentSum < 0 = lock currentSums
 
-positiveSequences previousNumberNegative currentSums bestSums (number : numbers)
-  | numberNegative && previousNumberNegative = positiveSequences numberNegative ((+ number) <$> currentSums) bestSums
-  | numberNegative                           = positiveSequences numberNegative ((+ number) <$> currentSums) (bestSums <> [last currentSums])
-  | previousNumberNegative                   = collapse
-  where
-    numberNegative = number < 0
+-- positiveSequences previousNumberNegative currentSums bestSums (number : numbers)
+--   | numberNegative && previousNumberNegative = positiveSequences numberNegative ((+ number) <$> currentSums) bestSums
+--   | numberNegative                           = positiveSequences numberNegative ((+ number) <$> currentSums) (bestSums <> [last currentSums])
+--   | previousNumberNegative                   = collapse
+--   where
+--     numberNegative = number < 0
 
-positiveSequences previousNumberNegative currentSums bestSums (number : numbers) = positiveSequences numberNegative newCurrentSums newBestSums numbers                       
+positiveSequences previousNumberNegative currentSums bestSums (number : numbers) = positiveSequences currentNumberNegative collapsedCurrentSums collapsedBestSums numbers                       
   where
-    numberNegative = number < 0
-    (newCurrentSums, newBestSums) =
-      if numberNegative then
-        if previousNumberNegative then
-        -- Negative negative
-          ((+ number) <$> currentSums, bestSums)
-        else
-        -- Positive negative
-          -- ((+ number) <$> currentSums, bestSums <> [last currentSums])
-          if not (null currentSums) then
-              ((+ number) <$> currentSums, bestSums <> [last currentSums])
-          else
-            ((+ number) <$> currentSums, bestSums)
+    currentNumberNegative = number < 0
+    newCurrentSums =
+      if previousNumberNegative && not currentNumberNegative then
+        -- Sequence has gone from negative to positive or is the first time being executed
+        -- ((+ number) <$> tail currentSums) <> [number]
+        ((+ number) <$> currentSums) <> [number]
       else
-        if previousNumberNegative then
-        -- Negative positive (or first time being executed)
-          if not (null currentSums) && head currentSums == 0 then
-            collapse (((+ number) <$> tail currentSums) <> [number]) bestSums
-          else
-            collapse (((+ number) <$> currentSums) <> [number]) bestSums
-        else
-        -- Positive positive
-          collapse ((+ number) <$> currentSums) bestSums
+        (+ number) <$> currentSums
+    newBestSums =
+      if not previousNumberNegative && currentNumberNegative then
+        -- Sequence has gone from positive to negative
+        bestSums <> [last currentSums] -- Add the last current sum to the list of best sums
+      else
+        bestSums
+    (collapsedCurrentSums, collapsedBestSums) =
+      if not currentNumberNegative then
+        -- Current number in sequence is positive
+        collapse newCurrentSums newBestSums
+      else
+        (newCurrentSums, newBestSums)
+    -- (newCurrentSums, newBestSums) =
+    --   if numberNegative then
+    --     if previousNumberNegative then
+    --     -- Negative negative
+    --       ((+ number) <$> currentSums, bestSums)
+    --     else
+    --     -- Positive negative
+    --       -- ((+ number) <$> currentSums, bestSums <> [last currentSums])
+    --       if not (null currentSums) then
+    --           ((+ number) <$> currentSums, bestSums <> [last currentSums])
+    --       else
+    --         ((+ number) <$> currentSums, bestSums)
+    --   else
+    --     if previousNumberNegative then
+    --     -- Negative positive (or first time being executed)
+    --       if not (null currentSums) && head currentSums == 0 then
+    --         collapse (((+ number) <$> tail currentSums) <> [number]) bestSums
+    --       else
+    --         collapse (((+ number) <$> currentSums) <> [number]) bestSums
+    --     else
+    --     -- Positive positive
+    --       collapse ((+ number) <$> currentSums) bestSums
 
     -- newCurrentSums =
     --   -- Sequence has gone from negative to positive or is the first time being executed
