@@ -2,11 +2,20 @@ module Main (main) where
 
 import Control.Monad ( replicateM )
 
+-- The modification (18^8 + 7) to apply after finding the fibonacci number
+modification :: Integer
 modification = 100000007
 
-fib 1 = 0
-fib 2 = 1
-fib n = fib (n - 1) + fib (n - 2)
+-- The list of fibonacci numbers
+-- Example: take 5 fibs = [0,1,1,2,3]
+fibs :: [Integer]
+fibs = 0 : go 0 1
+  where go a b = b : go b (a + b)
+
+-- The given nth fibonacci number
+-- Example: fib 5 = 5
+fib :: Int -> Integer
+fib n = fibs !! n
 
 main :: IO ()
 main = do
@@ -15,4 +24,4 @@ main = do
   fibonacciNumbers <- replicateM numberOfTestCases $ do -- For each test case to be entered...
     readLn :: IO Int -- Read and bind the fibonacci number to find
   
-  mapM_ (print . (`mod` modification) .fib) fibonacciNumbers
+  mapM_ (print . (`mod` modification) . fib) fibonacciNumbers -- Print the results of the correct fibonacci number "mod" the modification
