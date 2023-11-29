@@ -6,9 +6,9 @@ cabal-version: 2.2
 
 name:           RotateString
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/ChrisHobday/RotateString#readme>
-homepage:       https://github.com/ChrisHobday/RotateString#readme
-bug-reports:    https://github.com/ChrisHobday/RotateString/issues
+description:    Please see the README on GitHub at <https://github.com/ChrisHobday/HackerRank/tree/main/Functional%20Programming/RotateString#readme>
+homepage:       https://github.com/ChrisHobday/HackerRank#readme
+bug-reports:    https://github.com/ChrisHobday/HackerRank/issues
 author:         Chris Hobday
 maintainer:     Hobday.Chris@ProtonMail.com
 copyright:      Copyright (c) 2023 Chris Hobday
@@ -21,11 +21,9 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/ChrisHobday/RotateString
+  location: https://github.com/ChrisHobday/HackerRank
 
 library
-  exposed-modules:
-      Lib
   other-modules:
       Paths_RotateString
   autogen-modules:
