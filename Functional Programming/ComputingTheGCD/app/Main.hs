@@ -1,6 +1,6 @@
 module Main (main) where
 
--- The greatest common denominator of two gicen numbers
+-- The greatest common denominator of two given numbers
 -- Example: gcd' 45 10 = 5
 gcd' :: Integral t => t -> t -> t
 gcd' x y
