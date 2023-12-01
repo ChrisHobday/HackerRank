@@ -6,9 +6,9 @@ cabal-version: 2.2
 
 name:           MissingNumbers
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/ChrisHobday/MissingNumbers#readme>
-homepage:       https://github.com/ChrisHobday/MissingNumbers#readme
-bug-reports:    https://github.com/ChrisHobday/MissingNumbers/issues
+description:    Please see the README on GitHub at <https://github.com/ChrisHobday/HackerRank/tree/main/Functional%20Programming/MissingNumbers#readme>
+homepage:       https://github.com/ChrisHobday/HackerRank#readme
+bug-reports:    https://github.com/ChrisHobday/HackerRank/issues
 author:         Chris Hobday
 maintainer:     Hobday.Chris@ProtonMail.com
 copyright:      Copyright (c) 2023 Chris Hobday
@@ -21,11 +21,9 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/ChrisHobday/MissingNumbers
+  location: https://github.com/ChrisHobday/HackerRank
 
 library
-  exposed-modules:
-      Lib
   other-modules:
       Paths_MissingNumbers
   autogen-modules:
@@ -35,6 +33,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 executable MissingNumbers-exe
@@ -49,6 +48,7 @@ executable MissingNumbers-exe
   build-depends:
       MissingNumbers
     , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 test-suite MissingNumbers-test
@@ -64,4 +64,5 @@ test-suite MissingNumbers-test
   build-depends:
       MissingNumbers
     , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
