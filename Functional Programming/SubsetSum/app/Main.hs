@@ -6,36 +6,41 @@ import Data.List
   ( sortBy
   , subsequences )
 import qualified Data.Set as S
-  ( fromList, powerSet, map )
+  -- ( fromList, powerSet, map )
+import Data.Maybe
 import Control.Monad
   ( replicateM
   , mapM_ )
 
--- The subsets of a given length and a given list
--- Ex: subsetsOf 2 [1,2,3] = [[1,2],[1,3],[2,3]]
-subsetsOf :: (Eq t, Num t) => t -> [a] -> [[a]]
-subsetsOf 0 _ = [[]]
-subsetsOf _ [] = []
-subsetsOf n (x : xs) = map (x :) (subsetsOf (n - 1) xs) ++ subsetsOf n xs
+-- -- The subsets of a given length and a given list
+-- -- Ex: subsetsOf 2 [1,2,3] = [[1,2],[1,3],[2,3]]
+-- subsetsOf :: (Eq t, Num t) => t -> [a] -> [[a]]
+-- subsetsOf 0 _ = [[]]
+-- subsetsOf _ [] = []
+-- subsetsOf n (x : xs) = map (x :) (subsetsOf (n - 1) xs) ++ subsetsOf n xs
 
--- The subsets of a given list (in order) (excluding the empty set)
--- Ex: subsets [1,2,3] = [[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]
-subsets :: [a] -> [[a]]
-subsets xs = subsets' 1 xs
-  where
-    -- A subfunction to encapsulate the n parameter
-    subsets' n xs
-      | n == length xs + 1 = []
-      | otherwise          = subsetsOf n xs <> subsets' (n + 1) xs
+-- -- The subsets of a given list (in order) (excluding the empty set)
+-- -- Ex: subsets [1,2,3] = [[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]
+-- subsets :: [a] -> [[a]]
+-- subsets xs = subsets' 1 xs
+--   where
+--     -- A subfunction to encapsulate the n parameter
+--     subsets' n xs
+--       | n == length xs + 1 = []
+--       | otherwise          = subsetsOf n xs <> subsets' (n + 1) xs
 
--- The length of the smallest subset in a given list that is equal to or greater than a given number or -1 if there are none
-subsetSum :: (Ord p, Num p) => [p] -> p -> Int
-subsetSum integers s = findSubset $ subsets integers
-  where
-    findSubset (set : sets)
-      | sum set >= s = length set
-      | otherwise    = findSubset sets
-    findSubset [] = -1
+-- -- The length of the smallest subset in a given list that is equal to or greater than a given number or -1 if there are none
+-- subsetSum :: (Ord p, Num p) => [p] -> p -> Int
+-- subsetSum integers s = findSubset $ subsets integers
+--   where
+--     findSubset (set : sets)
+--       | sum set >= s = length set
+--       | otherwise    = findSubset sets
+--     findSubset [] = -1
+
+subsets xs = S.powerSet $ S.fromList xs
+
+subsetSum xs s = fromMaybe (-1) $ S.lookupMin $ S.map S.size $ S.filter ((>= s) . S.foldl (+) 0) (S.powerSet $ S.fromList xs)
 
 main :: IO ()
 main = do
