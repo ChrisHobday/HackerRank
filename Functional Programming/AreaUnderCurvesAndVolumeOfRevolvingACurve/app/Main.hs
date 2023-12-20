@@ -3,7 +3,7 @@ module Main (main) where
 import Text.Printf (printf)
 
 -- This function should return a list [area, volume].
-solve :: Int -> Int -> [Int] -> [Int] -> [Double]
+solve :: Int -> Int -> [Int] -> [Int] -> (Double, Double)
 solve l r a b = undefined
 
 --Input/Output.
