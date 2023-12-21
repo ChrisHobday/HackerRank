@@ -2,9 +2,14 @@ module Main (main) where
 
 import Text.Printf (printf)
 
--- This function should return a list [area, volume].
-solve :: Int -> Int -> [Int] -> [Int] -> (Double, Double)
-solve l r a b = undefined
+solve :: Double -> Double -> [Double] -> [Double] -> [Double]
+solve lowerRangeLimit upperRangeLimit coefficients exponents = [area, volume]
+  where
+    subintervalLength = 0.001
+    domain = [lowerRangeLimit, lowerRangeLimit + subintervalLength .. upperRangeLimit]
+    bigF d = sum $ zipWith (\coefficient exponent -> coefficient*d**exponent) coefficients exponents
+    area   = sum $ map ((* subintervalLength) . bigF) domain
+    volume = sum $ map (((* subintervalLength) . (\r -> pi * r ** 2)) . bigF) domain
 
 --Input/Output.
 main :: IO ()
