@@ -17,12 +17,11 @@ winOrLose row1Size row2Size row3Size =
       if row3Size == 1 then
         "WIN"
       else
-        if row2Size > 1 then
-          "WIN"
-        else
-          "LOSE"
+      
+
+
   else
-    
+
 
 main :: IO ()
 main = do
