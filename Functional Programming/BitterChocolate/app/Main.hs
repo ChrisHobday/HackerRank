@@ -8,8 +8,11 @@ data ChocolateBar =
     { row1Length :: Int
     , row2Length :: Int
     , row3Length :: Int }
+  deriving ( Show )
 
-move chocolateBar x y = undefined
+move chocolateBar x y = ChocolateBar { row1Length = min (row1Length chocolateBar) x - 1
+                                     , row2Length = if y < 3 then min (row2Length chocolateBar) x - 1 else row2Length chocolateBar
+                                     , row3Length = if y < 2 then min (row3Length chocolateBar) x - 1 else row3Length chocolateBar }
 
 -- winOrLose row1Size row2Size row3Size =
 --   if row1Size == 0 then
@@ -33,8 +36,9 @@ move chocolateBar x y = undefined
 
 main :: IO ()
 main = do
-  numberOfTestCases <- readLn :: IO Int
-  testCaseResults <- replicateM numberOfTestCases $ do
-    (row1Size : row2Size : row3Size :_) <- (read <$>) . words <$> getLine :: IO [Int] -- Read and bind row sizes
-    return $ winOrLose row1Size row2Size row3Size
-  print testCaseResults
+  -- numberOfTestCases <- readLn :: IO Int
+  -- testCaseResults <- replicateM numberOfTestCases $ do
+  --   (row1Size : row2Size : row3Size :_) <- (read <$>) . words <$> getLine :: IO [Int] -- Read and bind row sizes
+  --   return $ winOrLose row1Size row2Size row3Size
+  -- print testCaseResults
+  return ()
