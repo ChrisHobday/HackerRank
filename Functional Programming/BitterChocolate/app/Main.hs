@@ -14,6 +14,10 @@ move chocolateBar x y = ChocolateBar { row1Length = min (row1Length chocolateBar
                                      , row2Length = if y < 3 then min (row2Length chocolateBar) x - 1 else row2Length chocolateBar
                                      , row3Length = if y < 2 then min (row3Length chocolateBar) x - 1 else row3Length chocolateBar }
 
+possibleMove chocolateBar = undefined
+
+-- checkMoves chocolateBar = 
+
 -- winOrLose row1Size row2Size row3Size =
 --   if row1Size == 0 then
 --     if row2Size == 0 then
