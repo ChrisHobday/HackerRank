@@ -10,9 +10,11 @@ data ChocolateBar =
     , row3Length :: Int }
   deriving ( Show )
 
-move chocolateBar x y = ChocolateBar { row1Length = min (row1Length chocolateBar) x - 1
-                                     , row2Length = if y < 3 then min (row2Length chocolateBar) x - 1 else row2Length chocolateBar
-                                     , row3Length = if y < 2 then min (row3Length chocolateBar) x - 1 else row3Length chocolateBar }
+testBar = ChocolateBar { row1Length = 1, row2Length = 2, row3Length = 3 }
+
+move chocolateBar (x, y) = ChocolateBar { row1Length = min (row1Length chocolateBar) x - 1
+                                        , row2Length = if y < 3 then min (row2Length chocolateBar) x - 1 else row2Length chocolateBar
+                                        , row3Length = if y < 2 then min (row3Length chocolateBar) x - 1 else row3Length chocolateBar }
 
 rowMoves 1 1 = []
 rowMoves _ 0 = []
