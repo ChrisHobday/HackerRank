@@ -11,16 +11,21 @@ data ChocolateBar =
   deriving ( Show )
 
 testBar = ChocolateBar { row1Length = 1, row2Length = 2, row3Length = 3 }
+onePieceBar = ChocolateBar { row1Length = 0, row2Length = 0, row3Length = 1 }
+twoPieceBar = ChocolateBar { row1Length = 0, row2Length = 0, row3Length = 2 }
 
 move chocolateBar (x, y) = ChocolateBar { row1Length = min (row1Length chocolateBar) x - 1
                                         , row2Length = if y < 3 then min (row2Length chocolateBar) x - 1 else row2Length chocolateBar
                                         , row3Length = if y < 2 then min (row3Length chocolateBar) x - 1 else row3Length chocolateBar }
 
-rowMoves 1 1 = []
+rowMoves 3 1 = []
 rowMoves _ 0 = []
 rowMoves rowNumber rowLength = (rowLength, rowNumber) : rowMoves rowNumber (rowLength - 1)
 
 possibleMoves chocolateBar = rowMoves 1 (row1Length chocolateBar) <> rowMoves 2 (row2Length chocolateBar) <> rowMoves 3 (row3Length chocolateBar)
+
+winOrLose ChocolateBar { row1Length = 0, row2Length = 0, row3Length = 1 } = True
+winOrLose chocolateBar = head $ winOrLose <$> (move chocolateBar <$> possibleMoves chocolateBar)
 
 -- checkMoves chocolateBar = 
 
