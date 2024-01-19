@@ -13,6 +13,7 @@ data ChocolateBar =
 testBar = ChocolateBar { row1Length = 1, row2Length = 2, row3Length = 3 }
 onePieceBar = ChocolateBar { row1Length = 0, row2Length = 0, row3Length = 1 }
 twoPieceBar = ChocolateBar { row1Length = 0, row2Length = 0, row3Length = 2 }
+threePieceBar = ChocolateBar { row1Length = 0, row2Length = 1, row3Length = 2 }
 
 move chocolateBar (x, y) = ChocolateBar { row1Length = min (row1Length chocolateBar) x - 1
                                         , row2Length = if y < 3 then min (row2Length chocolateBar) x - 1 else row2Length chocolateBar
