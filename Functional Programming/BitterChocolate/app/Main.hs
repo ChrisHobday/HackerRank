@@ -10,16 +10,28 @@ data ChocolateBar =
     , row3Length :: Int }
   deriving ( Show )
 
+-- |X|X|X|
+-- |X|X| |
+-- |X| | |
 testBar = ChocolateBar { row1Length = 1, row2Length = 2, row3Length = 3 }
-onePieceBar = ChocolateBar { row1Length = 0, row2Length = 0, row3Length = 1 }
-twoPieceBar = ChocolateBar { row1Length = 0, row2Length = 0, row3Length = 2 }
-threePieceBar = ChocolateBar { row1Length = 0, row2Length = 1, row3Length = 2 }
+-- | | | |
+-- | | | |
+-- |X| | |
+onePieceBar = ChocolateBar { row1Length = 1, row2Length = 0, row3Length = 0 }
+-- | | | |
+-- | | | |
+-- |X|X| |
+twoPieceBar = ChocolateBar { row1Length = 2, row2Length = 0, row3Length = 0 }
+-- | | | |
+-- |X| | |
+-- |X|X| |
+threePieceBar = ChocolateBar { row1Length = 2, row2Length = 1, row3Length = 0 }
 
-move chocolateBar (x, y) = ChocolateBar { row1Length = min (row1Length chocolateBar) x - 1
+move chocolateBar (x, y) = ChocolateBar { row3Length = min (row1Length chocolateBar) x - 1
                                         , row2Length = if y < 3 then min (row2Length chocolateBar) x - 1 else row2Length chocolateBar
-                                        , row3Length = if y < 2 then min (row3Length chocolateBar) x - 1 else row3Length chocolateBar }
+                                        , row1Length = if y < 2 then min (row3Length chocolateBar) x - 1 else row3Length chocolateBar }
 
-rowMoves 3 1 = []
+rowMoves 1 1 = []
 rowMoves _ 0 = []
 rowMoves rowNumber rowLength = (rowLength, rowNumber) : rowMoves rowNumber (rowLength - 1)
 
